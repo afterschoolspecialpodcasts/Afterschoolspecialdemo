@@ -1,0 +1,2627 @@
+/* ============================================================
+   AFTER SCHOOL SPECIAL PODCAST — style.css v6.1
+   Fully Responsive: Mobile · Tablet · Desktop · Ultra-Wide
+   90s Sticker / Nickelodeon Aesthetic
+   FIXES: Logo centering all devices · VHS/Pizza/Hat stickers
+          visible mobile+tablet · About page meta fix ·
+          Duplicate rule cleanup
+   ============================================================ */
+
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,900;1,9..40,400&family=Bangers&family=Permanent+Marker&display=swap');
+
+/* ── CSS Variables ── */
+:root {
+  --bg-dark:        #2a0a44;
+  --bg-card:        #3d1266;
+  --bg-deeper:      #1a0033;
+  --bg-light:       #f8f4ff;
+  --accent:         #f4d35e;
+  --accent-hover:   #e0c040;
+  --text-white:     #ffffff;
+  --text-muted:     #d4b8f0;
+  --text-dark:      #1a0033;
+  --border-gold:    rgba(244,211,94,0.18);
+  --border-card:    rgba(244,211,94,0.14);
+  --font-display:   'DM Serif Display', Georgia, serif;
+  --font-body:      'DM Sans', system-ui, sans-serif;
+  --font-stamp:     'Bangers', cursive;
+  /* Layout — fluid 90%, max 1200px, always centered */
+  --container-w:    1200px;
+  --section-pad:    5rem;
+  --radius:         12px;
+  --transition:     0.22s ease;
+  /* Sticker colors */
+  --sticker-yellow: #f4d35e;
+  --sticker-orange: #ff6b35;
+  --sticker-pink:   #ff4da6;
+  --sticker-green:  #39d353;
+  --sticker-blue:   #4dc3ff;
+}
+
+/* ── Reset ── */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-dark);
+  color: var(--text-white);
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+img  { display:block; max-width:100%; }
+a    { color:inherit; text-decoration:none; }
+ul   { list-style:none; }
+iframe { display:block; border:none; }
+
+/* ======================================================
+   ░░ FLUID CONTAINER SYSTEM
+   All main blocks: 90% wide, max 1200px, margin 0 auto
+   ====================================================== */
+.container {
+  width: 90%;
+  max-width: var(--container-w);
+  margin: 0 auto;
+}
+.container--narrow {
+  width: 90%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* ======================================================
+   ░░ SPOTIFY PLAYER WRAPPER
+   Fixed 232px height so Save/Share buttons are never cut off.
+   ====================================================== */
+.spotify-player-wrap {
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.spotify-player-wrap iframe {
+  width: 100%;
+  height: 232px;
+  border: none;
+  display: block;
+}
+.spotify-player-wrap--styled {
+  border: 2px solid var(--border-gold);
+  box-shadow: 0 0 40px rgba(244,211,94,0.08), 0 16px 48px rgba(0,0,0,0.55);
+}
+
+/* ======================================================
+   ░░ RESPONSIVE IFRAME — YouTube 16:9
+   ====================================================== */
+.iframe-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+.iframe-wrap iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.embed-frame {
+  border: 2px solid var(--border-gold);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 0 48px rgba(244,211,94,0.07), 0 24px 64px rgba(0,0,0,0.6);
+}
+.embed-frame--red {
+  border-color: rgba(255,0,0,0.3);
+  box-shadow: 0 0 48px rgba(255,0,0,0.08), 0 24px 64px rgba(0,0,0,0.6);
+}
+
+/* ======================================================
+   ░░ WELCOME VIDEO — 900px max desktop, 100% mobile
+   ====================================================== */
+.welcome-video-wrap {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ======================================================
+   ░░ EPISODE SPOTLIGHT
+   ====================================================== */
+.ep-spotlight-inner {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 3.5rem;
+  align-items: center;
+  max-width: var(--container-w);
+  margin: 0 auto;
+}
+.ep-spotlight-player { width: 100%; }
+.ep-spotlight-player .spotify-player-wrap {
+  border: 2px solid var(--border-gold);
+  border-radius: var(--radius);
+  box-shadow: 0 0 40px rgba(244,211,94,0.08), 0 16px 48px rgba(0,0,0,0.55);
+}
+@media (max-width: 860px) {
+  .ep-spotlight-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+
+/* ======================================================
+   ░░ ARCHIVE GRID
+   ====================================================== */
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.archive-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.archive-panel:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.45); }
+.archive-panel-header {
+  padding: 1.25rem 1.5rem 0;
+  display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+}
+.archive-ep-badge {
+  display: inline-block;
+  background: rgba(244,211,94,0.12);
+  border: 1px solid rgba(244,211,94,0.28);
+  color: var(--accent);
+  font-family: var(--font-stamp);
+  font-size: 0.82rem; letter-spacing: 0.08em;
+  padding: 0.22rem 0.8rem; border-radius: 50px;
+}
+.archive-ep-title {
+  font-family: var(--font-display);
+  font-size: 0.98rem; color: var(--accent);
+  line-height: 1.3; padding: 0.6rem 1.5rem 0.5rem;
+}
+.archive-ep-desc {
+  font-size: 0.82rem; color: var(--text-muted);
+  padding: 0 1.5rem 1rem; line-height: 1.6; flex: 1;
+}
+.archive-panel .spotify-player-wrap { margin-top: auto; border-radius: 0; }
+.archive-panel .spotify-player-wrap iframe { border-radius: 0; }
+
+/* ======================================================
+   ░░ BUTTONS
+   ====================================================== */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  background: var(--accent); color: var(--text-dark);
+  border-radius: 8px; font-weight: 900; font-family: var(--font-body);
+  font-size: 0.95rem; padding: 0.75rem 1.75rem; letter-spacing: 0.02em;
+  border: 2px solid var(--accent); cursor: pointer; white-space: nowrap;
+  text-decoration: none;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+.btn-primary:hover { background:var(--accent-hover); border-color:var(--accent-hover); transform:translateY(-2px); }
+
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  background: transparent; color: var(--accent);
+  border-radius: 8px; font-weight: 900; font-family: var(--font-body);
+  font-size: 0.95rem; padding: 0.75rem 1.75rem; letter-spacing: 0.02em;
+  border: 2px solid var(--accent); cursor: pointer; white-space: nowrap;
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+.btn-outline:hover { background:var(--accent); color:var(--text-dark); transform:translateY(-2px); }
+
+.btn-red {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  background: #ff0000; color: #fff;
+  border-radius: 8px; font-weight: 900; font-family: var(--font-body);
+  font-size: 0.95rem; padding: 0.75rem 1.75rem; letter-spacing: 0.02em;
+  border: 2px solid #ff0000; cursor: pointer; white-space: nowrap;
+  text-decoration: none;
+  transition: background var(--transition), transform var(--transition);
+}
+.btn-red:hover { background:#cc0000; border-color:#cc0000; transform:translateY(-2px); }
+
+/* ── Section helpers ── */
+section { padding: var(--section-pad) 0; }
+.section-label {
+  display: block; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 0.5rem;
+}
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.5vw, 2.75rem);
+  line-height: 1.15; margin-bottom: 1rem;
+}
+.divider-accent {
+  width: 52px; height: 3px;
+  background: var(--accent); border-radius: 2px;
+  margin-bottom: 1.75rem;
+}
+.text-center { text-align: center; }
+.eyebrow-pill {
+  display: inline-block;
+  background: rgba(244,211,94,0.1); border: 1px solid rgba(244,211,94,0.3);
+  color: var(--accent); font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.35rem 1rem; border-radius: 50px; margin-bottom: 1.25rem;
+}
+
+/* ======================================================
+   ░░ CAUTION TAPE DIVIDER
+   ====================================================== */
+.caution-tape {
+  width: 100%; overflow: hidden; line-height: 0;
+  position: relative; z-index: 10; height: 48px;
+  display: flex; align-items: center;
+}
+.caution-tape-inner {
+  display: flex; width: 200%;
+  animation: caution-scroll 18s linear infinite;
+}
+@keyframes caution-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.caution-tape-inner span {
+  display: inline-block; font-family: var(--font-stamp);
+  font-size: 1.05rem; letter-spacing: 0.18em;
+  padding: 0.55rem 1.2rem; white-space: nowrap; flex-shrink: 0;
+}
+/* Yellow / Black */
+.caution-tape--ybk .caution-tape-inner {
+  background: repeating-linear-gradient(-55deg,
+    #f4d35e 0px, #f4d35e 28px, #1a0033 28px, #1a0033 56px);
+}
+.caution-tape--ybk .caution-tape-inner span { color:#1a0033; background:#f4d35e; }
+/* Purple / Gold */
+.caution-tape--pgold { transform: rotate(-1deg); margin: -4px 0; }
+.caution-tape--pgold .caution-tape-inner {
+  background: repeating-linear-gradient(55deg,
+    #2a0a44 0px, #2a0a44 28px, #f4d35e 28px, #f4d35e 56px);
+  animation-direction: reverse; animation-duration: 22s;
+}
+.caution-tape--pgold .caution-tape-inner span { color:#f4d35e; background:#2a0a44; }
+
+/* ======================================================
+   ░░ STICKER SYSTEM
+   ====================================================== */
+.sticker {
+  position: absolute; pointer-events: none; z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-stamp); font-weight: 400;
+  letter-spacing: 0.05em; text-align: center; user-select: none;
+  filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
+}
+@keyframes sticker-float-a {
+  0%,100% { transform: rotate(-8deg) translateY(0px) scale(1); }
+  50%      { transform: rotate(-6deg) translateY(-8px) scale(1.03); }
+}
+@keyframes sticker-float-b {
+  0%,100% { transform: rotate(6deg) translateY(0px) scale(1); }
+  50%      { transform: rotate(8deg) translateY(-6px) scale(1.02); }
+}
+@keyframes sticker-float-c {
+  0%,100% { transform: rotate(12deg) translateY(0px) scale(1); }
+  50%      { transform: rotate(10deg) translateY(-10px) scale(1.04); }
+}
+@keyframes sticker-float-d {
+  0%,100% { transform: rotate(-14deg) translateY(0px) scale(1); }
+  50%      { transform: rotate(-12deg) translateY(-7px) scale(1.02); }
+}
+@keyframes sticker-pulse {
+  0%,100% { transform: scale(1) rotate(-5deg); }
+  50%      { transform: scale(1.08) rotate(-3deg); }
+}
+.sticker-circle {
+  border-radius: 50%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-family: var(--font-stamp); font-size: 0.7rem; line-height: 1.2;
+  border: 3px solid rgba(0,0,0,0.15);
+}
+.sticker-circle--yellow { background: var(--sticker-yellow); color: #1a0033; }
+.sticker-circle--pink   { background: var(--sticker-pink);   color: #ffffff; }
+.sticker-circle--green  { background: var(--sticker-green);  color: #1a0033; }
+.sticker-circle--blue   { background: var(--sticker-blue);   color: #1a0033; }
+.sticker-circle--orange { background: var(--sticker-orange); color: #ffffff; }
+.sticker-badge {
+  padding: 0.5rem 1rem; border-radius: 6px;
+  font-family: var(--font-stamp); font-size: 0.8rem;
+  letter-spacing: 0.06em; border: 3px solid rgba(0,0,0,0.2);
+  animation: sticker-pulse 3s ease-in-out infinite;
+}
+.sticker-badge--yellow { background: var(--sticker-yellow); color: #1a0033; }
+.sticker-badge--pink   { background: var(--sticker-pink);   color: #ffffff; }
+.sticker-badge--orange { background: var(--sticker-orange); color: #ffffff; }
+
+/* ======================================================
+   ░░ NAVBAR
+   ====================================================== */
+#navbar {
+  position: sticky; top: 0; z-index: 1000;
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--border-gold);
+  padding: 0.9rem 0;
+}
+.nav-inner {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 1rem;
+}
+.nav-logo img { height: 48px; width: auto; display: block; }
+.nav-links { display: flex; align-items: center; gap: 2rem; }
+.nav-links a {
+  color: var(--text-white); font-weight: 500; font-size: 0.92rem;
+  letter-spacing: 0.03em; position: relative; transition: color var(--transition);
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0;
+  width: 0; height: 2px; background: var(--accent); border-radius: 2px;
+  transition: width var(--transition);
+}
+.nav-links a:hover, .nav-links a.active { color: var(--accent); }
+.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+.nav-right { display: flex; align-items: center; gap: 1rem; }
+.nav-icons  { display: flex; align-items: center; gap: 0.6rem; }
+.nav-icons a { display: flex; align-items: center; color: var(--accent); transition: opacity var(--transition); }
+.nav-icons a:hover { opacity: 0.7; }
+.nav-icons svg { width: 22px; height: 22px; }
+.hamburger {
+  display: none; background: none; border: none;
+  cursor: pointer; padding: 0.2rem; color: var(--accent); line-height: 1;
+}
+.hamburger svg { width: 28px; height: 28px; display: block; }
+
+/* ── Mobile Menu — single clean definition ── */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--bg-deeper);
+  z-index: 1200;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a { color: var(--text-white); font-size: 1.6rem; font-weight: 700; transition: color var(--transition); }
+.mobile-menu a:hover { color: var(--accent); }
+.mobile-menu .btn-primary { font-size: 1rem; }
+
+/* Close button — large tap zone, always on top */
+.mobile-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1300;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 2.5rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 12px;
+}
+
+@media (max-width: 767px) {
+  .nav-links { display: none; }
+  .nav-right .btn-primary { display: none; }
+  .nav-right .nav-icons { display: none; }
+  .hamburger { display: flex; }
+}
+
+/* ======================================================
+   ░░ HERO SECTION
+   FIX: Proper centering on ALL devices.
+   Logo uses max-width so it scales proportionally.
+   Stickers use fixed positioning relative to .hero-logo-frame
+   and are visible on ALL screen sizes (no display:none).
+   ====================================================== */
+#hero {
+  position: relative;
+  background: radial-gradient(ellipse at 50% 38%, #3d1266 0%, var(--bg-dark) 68%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 0 3.5rem;
+  overflow: hidden;
+  min-height: 80vh;
+}
+
+.hero-ring {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(244,211,94,0.06);
+  pointer-events: none; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+}
+.hero-ring-1 { width: 420px; height: 420px; }
+.hero-ring-2 { width: 660px; height: 660px; }
+
+/* Hero content — centered block, scales on every device */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Logo Frame — centered, proportional on all devices ── */
+.hero-logo-frame {
+  position: relative;
+  display: inline-block;
+  margin: 0 auto 1.5rem;
+  /* Proportional width: large on desktop, safe on mobile */
+  width: min(520px, 88vw);
+}
+
+@keyframes logo-glow-pulse {
+  0%,100% {
+    filter: drop-shadow(0 0 18px rgba(244,211,94,0.55))
+            drop-shadow(0 0 40px rgba(61,18,102,0.9));
+  }
+  50% {
+    filter: drop-shadow(0 0 32px rgba(244,211,94,0.88))
+            drop-shadow(0 0 64px rgba(61,18,102,0.95));
+  }
+}
+
+/* Logo image fills its frame proportionally */
+.hero-logo-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  animation: logo-glow-pulse 3s ease-in-out infinite;
+}
+
+/* ======================================================
+   ░░ LOGO STICKERS — VHS · Pizza · Party Hat
+   Visible on ALL screen sizes (mobile, tablet, desktop).
+   Positioned relative to .hero-logo-frame so they always
+   orbit the logo correctly regardless of screen width.
+   ====================================================== */
+
+/* Base logo sticker rule */
+.logo-sticker {
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+  /* Emoji font for cross-platform rendering */
+  font-family: "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Drop shadow for visibility on any background */
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+}
+
+/* 
+   VHS Tape — top left
+   Animated with sticker-float-b (gentle tilt + bob)
+*/
+.logo-sticker--vhs {
+  top: -18px;
+  left: -20px;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  animation: sticker-float-b 3.5s ease-in-out infinite;
+  /* Slight rotation for that "tossed sticker" feel */
+  transform-origin: center center;
+}
+
+/* 
+   Pizza Slice — top right
+   Animated with sticker-float-d (opposite tilt direction)
+*/
+.logo-sticker--pizza {
+  top: -14px;
+  right: -18px;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  animation: sticker-float-d 4s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+/*
+   Celebration Hat — bottom center
+   Animated with sticker-float-c (larger arc)
+*/
+.logo-sticker--hat {
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  animation: sticker-float-hat 4.5s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+/* Custom hat animation that preserves the translateX centering */
+@keyframes sticker-float-hat {
+  0%,100% { transform: translateX(-50%) rotate(10deg) translateY(0px) scale(1); }
+  50%      { transform: translateX(-50%) rotate(12deg) translateY(-8px) scale(1.05); }
+}
+
+/* ── HERO FLOATING STICKER CLUSTER (background stickers) ──
+   These use viewport-edge positioning.
+   VISIBLE on all devices — no display:none at mobile.
+   Sized with clamp() so they scale down gracefully.
+*/
+.hero-sticker-cluster {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 3;
+}
+.hsc-item { position: absolute; }
+
+/* Positions — kept well within viewport edges on mobile */
+.hsc-1 { top: 8%;  left: 3%;  }
+.hsc-2 { top: 12%; right: 3%; }
+.hsc-3 { bottom: 18%; left: 3%;  }
+.hsc-4 { bottom: 14%; right: 3%; }
+.hsc-5 { top: 52%;  left: 2%;  }
+.hsc-6 { top: 40%;  right: 2%; }
+
+/* Cluster sticker sizing: clamp scales from mobile to desktop */
+.hsc-item .sticker-circle {
+  width:  clamp(44px, 8vw, 68px);
+  height: clamp(44px, 8vw, 68px);
+  font-size: clamp(0.45rem, 1.1vw, 0.58rem);
+}
+.hsc-item .sticker-circle span {
+  font-size: clamp(0.75rem, 1.8vw, 1rem);
+  line-height: 1;
+}
+
+/* On very small phones (≤360px) tuck cluster items inward */
+@media (max-width: 360px) {
+  .hsc-1 { left: 1%;  }
+  .hsc-2 { right: 1%; }
+  .hsc-3 { left: 1%;  }
+  .hsc-4 { right: 1%; }
+  .hsc-5 { left: 1%;  }
+  .hsc-6 { right: 1%; }
+}
+
+/* ── Hero text ── */
+.hero-title {
+  font-family: var(--font-display); font-size: clamp(2rem,4.5vw,3.4rem);
+  color: var(--accent); line-height: 1.08; margin-bottom: 0.85rem;
+}
+.hero-tagline  { font-size: clamp(1rem,1.8vw,1.15rem); color: var(--text-white); margin-bottom: 0.6rem; }
+.hero-hosts    { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+.hero-btns     { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(22px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.hero-content .eyebrow-pill    { animation:fadeUp 0.6s ease both 0.05s; }
+.hero-content .hero-logo-frame { animation:fadeUp 0.7s ease both 0.10s; }
+.hero-content .hero-title      { animation:fadeUp 0.6s ease both 0.25s; }
+.hero-content .hero-tagline    { animation:fadeUp 0.6s ease both 0.33s; }
+.hero-content .hero-hosts      { animation:fadeUp 0.6s ease both 0.40s; }
+.hero-content .hero-btns       { animation:fadeUp 0.6s ease both 0.47s; }
+
+/* ======================================================
+   ░░ EP106 SPOTLIGHT
+   ====================================================== */
+#ep106-spotlight {
+  background: linear-gradient(135deg, var(--bg-deeper) 0%, #2a0a44 60%, #1a0033 100%);
+  padding: 5rem 0; border-bottom: 2px solid var(--border-gold);
+}
+.ep106-live-badge {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  background: var(--sticker-pink); color: #fff;
+  font-family: var(--font-stamp); font-size: 0.82rem; letter-spacing: 0.12em;
+  padding: 0.32rem 0.9rem; border-radius: 50px; margin-bottom: 1rem;
+  width: fit-content; animation: sticker-pulse 2.5s ease-in-out infinite;
+}
+.ep106-live-badge::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: #fff; display: inline-block;
+  animation: blink-dot 1.2s ease-in-out infinite;
+}
+@keyframes blink-dot {
+  0%,100% { opacity:1; }
+  50%      { opacity:0.15; }
+}
+.ep106-ep-number {
+  font-family: var(--font-stamp); font-size: clamp(3rem,7vw,5.5rem);
+  color: var(--accent); line-height: 1; margin-bottom: 0.25rem;
+  text-shadow: 0 0 40px rgba(244,211,94,0.3);
+}
+.ep106-title {
+  font-family: var(--font-display); font-size: clamp(1.3rem,2.5vw,1.9rem);
+  color: var(--text-white); line-height: 1.25; margin-bottom: 0.85rem;
+}
+.ep106-desc {
+  font-size: 0.95rem; color: var(--text-muted); line-height: 1.78;
+  margin-bottom: 1.75rem; max-width: 480px;
+}
+.ep106-actions { display:flex; gap:0.85rem; flex-wrap:wrap; align-items:center; }
+@media (max-width: 500px) { .ep106-actions { flex-direction:column; align-items:flex-start; } }
+
+/* ======================================================
+   ░░ PAGE HERO (inner pages)
+   ====================================================== */
+.page-hero {
+  background: radial-gradient(ellipse at 50% 60%, #3d1266 0%, var(--bg-dark) 70%);
+  padding: 5rem 0 4rem; text-align: center;
+  border-bottom: 1px solid var(--border-gold);
+  position: relative; overflow: hidden;
+}
+.page-hero .section-heading { color: var(--accent); }
+.page-hero p { color: var(--text-muted); max-width: 580px; margin: 0 auto; font-size: 1.05rem; }
+
+/* ======================================================
+   ░░ CREW PHOTO SECTION
+   ====================================================== */
+#crew-photo-section { background: var(--bg-deeper); padding: 4.5rem 0; }
+.crew-photo-wrap {
+  display: grid; grid-template-columns: 1.1fr 1fr;
+  gap: 4rem; align-items: center;
+}
+.crew-photo-img {
+  width: 100%; border-radius: var(--radius);
+  border: 3px solid var(--accent); object-fit: cover;
+  box-shadow: 0 0 32px rgba(244,211,94,0.15), 0 16px 48px rgba(0,0,0,0.55);
+}
+.crew-photo-text .section-heading { color: var(--text-white); }
+.crew-photo-text p { color:var(--text-muted); font-size:0.95rem; line-height:1.78; margin-bottom:1.1rem; }
+.crew-photo-text p:last-of-type { margin-bottom:1.75rem; }
+.host-pill-row { display:flex; gap:0.65rem; flex-wrap:wrap; margin-bottom:1.75rem; }
+.host-pill {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: var(--bg-card); border: 1px solid var(--border-card);
+  border-radius: 50px; padding: 0.4rem 0.95rem;
+  font-weight: 700; font-size: 0.85rem; color: var(--accent);
+}
+.host-pill-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--bg-deeper); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-stamp); font-size: 0.75rem;
+}
+@media (max-width: 860px) { .crew-photo-wrap { grid-template-columns: 1fr; gap: 2.5rem; } }
+
+/* ======================================================
+   ░░ HOST CARDS — responsive auto-fit grid
+   ====================================================== */
+.hosts-section { background: var(--bg-dark); padding: var(--section-pad) 0; }
+.hosts-section .section-heading { color:var(--accent); text-align:center; }
+.hosts-section .section-label   { text-align:center; }
+.host-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.75rem; margin-top: 3rem;
+}
+.host-card-full {
+  background: var(--bg-card); border: 1px solid var(--border-card);
+  border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.host-card-full:hover { transform:translateY(-5px); box-shadow:0 16px 40px rgba(0,0,0,0.45); }
+.host-card-photo { width:100%; aspect-ratio:1/1; object-fit:cover; object-position:top center; background:var(--bg-deeper); }
+.host-card-body { padding:1.5rem 1.5rem 1.75rem; display:flex; flex-direction:column; gap:0.5rem; flex:1; }
+.host-card-name { font-family:var(--font-display); font-size:1.3rem; color:var(--accent); }
+.host-card-role { font-size:0.72rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); }
+.host-card-bio  { font-size:0.88rem; color:rgba(255,255,255,0.82); line-height:1.72; flex:1; }
+
+/* ======================================================
+   ░░ REVIEWS SECTION
+   ====================================================== */
+#reviews { background:var(--bg-deeper); padding:var(--section-pad) 0; }
+#reviews .section-heading { color:var(--accent); text-align:center; }
+#reviews .section-label   { text-align:center; }
+.reviews-sub {
+  text-align:center; color:var(--text-muted); font-size:0.9rem;
+  margin-bottom:2.75rem; display:flex; align-items:center;
+  justify-content:center; gap:0.5rem; flex-wrap:wrap;
+}
+.apple-badge {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+  border-radius:50px; padding:0.25rem 0.75rem;
+  font-size:0.75rem; font-weight:700; color:rgba(255,255,255,0.7);
+}
+.star-rating { display:inline-flex; gap:2px; color:var(--accent); }
+.star-rating svg { width:16px; height:16px; }
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.4rem;
+}
+.review-card {
+  background:var(--bg-card); border:1px solid var(--border-card);
+  border-radius:14px; padding:1.6rem; display:flex; flex-direction:column;
+  gap:0.75rem; position:relative;
+  transition:transform var(--transition), box-shadow var(--transition);
+}
+.review-card:hover { transform:translateY(-4px); box-shadow:0 14px 40px rgba(0,0,0,0.4); }
+.review-card-sticker {
+  position:absolute; top:-18px; right:-14px; width:52px; height:52px;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:1.3rem; border:3px solid var(--bg-deeper);
+  animation:sticker-float-a 4s ease-in-out infinite;
+}
+.review-card-sticker--a { background:var(--sticker-yellow); animation-delay:0s; }
+.review-card-sticker--b { background:var(--sticker-pink);   animation-delay:0.6s; }
+.review-card-sticker--c { background:var(--sticker-green);  animation-delay:1.2s; }
+.review-card-sticker--d { background:var(--sticker-orange); animation-delay:1.8s; }
+.review-title  { font-family:var(--font-display); font-size:1rem; color:var(--accent); line-height:1.3; }
+.review-body   { font-size:0.86rem; color:rgba(255,255,255,0.82); line-height:1.65; flex:1; }
+.review-author { font-size:0.76rem; color:var(--text-muted); font-weight:700; letter-spacing:0.04em; display:flex; align-items:center; gap:0.4rem; }
+.review-author::before { content:'—'; color:var(--accent); }
+.review-source {
+  display:inline-flex; align-items:center; gap:0.3rem;
+  background:rgba(255,255,255,0.04); border-radius:50px;
+  padding:0.2rem 0.6rem; font-size:0.68rem; font-weight:700;
+  color:var(--text-muted); letter-spacing:0.06em; text-transform:uppercase;
+  border:1px solid rgba(255,255,255,0.08); align-self:flex-start;
+}
+.overall-rating { text-align:center; margin-bottom:2rem; }
+.overall-score  { font-family:var(--font-stamp); font-size:5rem; color:var(--accent); line-height:1; }
+.overall-label  { color:var(--text-muted); font-size:0.82rem; margin-top:0.25rem; }
+
+/* ======================================================
+   ░░ ABOUT — Story Section
+   ====================================================== */
+.about-story-section { background: var(--bg-light); padding: var(--section-pad) 0; }
+.about-story-section .section-label   { color: var(--bg-card); }
+.about-story-section .section-heading { color: var(--bg-dark); }
+.about-story-section p { color: var(--text-dark); margin-bottom: 1.2rem; line-height: 1.82; font-size: 0.97rem; max-width: 760px; }
+.story-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:5rem; align-items:start; }
+.story-image-col img { width:100%; border-radius:14px; border:3px solid var(--bg-dark); object-fit:cover; }
+.mission-bar { background:var(--accent); padding:3rem 0; text-align:center; }
+.mission-bar blockquote {
+  font-family:var(--font-display); font-size:clamp(1.3rem,3vw,2rem);
+  color:var(--text-dark); max-width:780px; margin:0 auto;
+  line-height:1.4; font-style:italic; padding:0 1.5rem;
+}
+.mission-bar cite {
+  display:block; font-family:var(--font-body); font-style:normal;
+  font-size:0.82rem; font-weight:700; letter-spacing:0.1em;
+  text-transform:uppercase; color:var(--text-dark); opacity:0.65; margin-top:1rem;
+}
+
+/* ======================================================
+   ░░ PLATFORM CARDS
+   ====================================================== */
+#home-listen { background:var(--bg-deeper); }
+#home-listen .section-heading { color:var(--text-white); }
+.platforms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem; margin-top: 2.75rem;
+}
+.platform-card {
+  display:flex; align-items:center; gap:1.1rem;
+  background:rgba(255,255,255,0.04); border:1px solid var(--border-card);
+  border-radius:var(--radius); padding:1.3rem 1.6rem;
+  color:var(--text-white); font-weight:700; font-size:1rem; text-decoration:none;
+  transition:background var(--transition), transform var(--transition), border-color var(--transition);
+}
+.platform-card:hover { background:rgba(244,211,94,0.08); transform:translateY(-3px); border-color:rgba(244,211,94,0.3); }
+.platform-card svg { flex-shrink:0; }
+.platform-card .platform-sub { display:block; font-size:0.75rem; font-weight:400; color:var(--text-muted); margin-top:0.15rem; }
+
+/* ======================================================
+   ░░ CONTACT / FORM
+   ====================================================== */
+#contact,.contact-page { background:var(--bg-dark); }
+#contact .section-heading,.contact-page .section-heading { color:var(--text-white); }
+.contact-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:4rem; align-items:start; margin-top:3rem; }
+.contact-info h3 { font-family:var(--font-display); font-size:1.5rem; color:var(--accent); margin-bottom:1rem; }
+.contact-info p  { color:var(--text-muted); font-size:0.94rem; margin-bottom:1.5rem; line-height:1.75; }
+.form-group { margin-bottom:1.4rem; }
+.form-group label { display:block; font-size:0.82rem; font-weight:700; color:var(--text-muted); margin-bottom:0.45rem; letter-spacing:0.05em; text-transform:uppercase; }
+.form-group input,.form-group textarea {
+  width:100%; background:rgba(255,255,255,0.05);
+  border:1.5px solid rgba(244,211,94,0.18); border-radius:8px;
+  padding:0.88rem 1rem; color:var(--text-white);
+  font-family:var(--font-body); font-size:0.95rem; outline:none;
+  transition:border-color var(--transition), background var(--transition);
+}
+.form-group input::placeholder,.form-group textarea::placeholder { color:rgba(255,255,255,0.25); }
+.form-group input:focus,.form-group textarea:focus { border-color:var(--accent); background:rgba(244,211,94,0.04); }
+.form-group textarea { min-height:140px; resize:vertical; }
+.form-submit-btn { width:100%; font-size:1rem; padding:0.92rem 1.75rem; justify-content:center; }
+.form-success { display:none; background:rgba(244,211,94,0.1); border:1px solid var(--accent); color:var(--accent); border-radius:8px; padding:1rem; text-align:center; font-weight:600; margin-top:1rem; font-size:0.95rem; }
+
+/* ======================================================
+   ░░ FOOTER
+   ====================================================== */
+footer { background:var(--bg-deeper); border-top:1px solid rgba(244,211,94,0.1); padding:2.5rem 0; }
+.footer-inner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem; }
+.footer-logo img { height:40px; width:auto; }
+.footer-center { text-align:center; font-size:0.81rem; color:rgba(255,255,255,0.45); line-height:1.8; }
+.footer-credit { color:var(--accent); font-weight:700; }
+.footer-credit a { color:var(--accent); }
+.footer-credit a:hover { text-decoration:underline; }
+.footer-right { display:flex; align-items:center; gap:0.8rem; }
+.footer-right a { display:flex; align-items:center; color:var(--accent); transition:opacity var(--transition); }
+.footer-right a:hover { opacity:0.7; }
+.footer-right svg { width:22px; height:22px; }
+
+/* TikTok embed */
+.tiktok-embed-container { display:flex; justify-content:center; margin-top:2.5rem; }
+.tiktok-embed-container blockquote { max-width:605px; width:100%; }
+
+/* Media label */
+.media-section-label { display:flex; align-items:center; gap:0.75rem; justify-content:center; margin-top:1.25rem; }
+.media-section-label svg { width:26px; height:26px; flex-shrink:0; }
+.media-section-label a { color:var(--text-muted); font-size:0.85rem; font-weight:600; transition:color var(--transition); }
+.media-section-label a:hover { color:var(--accent); }
+
+/* ======================================================
+   ░░ RESPONSIVE BREAKPOINTS
+   ====================================================== */
+@media (max-width: 900px) {
+  .story-grid    { grid-template-columns:1fr; gap:3rem; }
+  .contact-grid  { grid-template-columns:1fr; gap:2.5rem; }
+}
+
+@media (max-width: 600px) {
+  :root { --section-pad: 3.5rem; }
+  #hero { padding: 3rem 0 2.5rem; min-height: 70vh; }
+  .hero-btns     { flex-direction:column; align-items:center; }
+  .footer-inner  { flex-direction:column; align-items:center; text-align:center; }
+  .footer-right  { justify-content:center; }
+  .footer-center { order:2; }
+  .platforms-grid { grid-template-columns:1fr; }
+  .reviews-grid  { grid-template-columns:1fr; }
+  .page-hero     { padding:3.5rem 0 2.5rem; }
+  .overall-score { font-size:3.5rem; }
+  .host-pill-row { gap:0.5rem; }
+  .archive-grid  { grid-template-columns:1fr; }
+  .hero-ring-1, .hero-ring-2 { display:none; } /* Rings too large on mobile — remove */
+}
+
+@media (max-width: 400px) {
+  /* Tighten logo sticker positions on very small screens */
+  .logo-sticker--vhs  { top: -12px; left: -10px; }
+  .logo-sticker--pizza { top: -10px; right: -10px; }
+  .logo-sticker--hat  { bottom: -14px; }
+}
+
+/* Ultra-wide caps */
+@media (min-width: 1600px) { :root { --container-w: 1300px; } }
+@media (min-width: 2000px) { :root { --container-w: 1400px; } body { font-size:1.05rem; } }
+
+/* ======================================================
+   ░░ INDEX PAGE — classes replacing all former inline styles
+   ====================================================== */
+
+/* EP spotlight section background */
+.spotlight-section {
+  background: linear-gradient(135deg, var(--bg-deeper) 0%, #2a0a44 60%, #1a0033 100%);
+  padding: 5rem 0;
+  border-bottom: 2px solid var(--border-gold);
+}
+
+/* Welcome video section background */
+.welcome-video-section {
+  background: var(--bg-dark);
+  padding: 4.5rem 0;
+}
+
+/* Section label centered variant */
+.section-label--center {
+  text-align: center;
+  display: block;
+}
+
+/* Section heading modifiers */
+.section-heading--center { text-align: center; }
+.section-heading--accent  { color: var(--accent); }
+
+/* Divider centered variant */
+.divider-accent--center {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+}
+
+/* Welcome video intro paragraph */
+.welcome-video-intro {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  max-width: 540px;
+  margin: 0 auto 2rem;
+}
+
+/* Centered CTA wrapper (replaces div style="text-align:center;margin-top:Xrem") */
+.section-cta-center {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* Button small variant — replaces font-size/padding inline on Apple Podcasts btn */
+.btn-outline--sm {
+  font-size: 0.85rem;
+  padding: 0.65rem 1.3rem;
+}
+
+/* Button with margin-top — replaces style="margin-top:0.5rem" on crew section link */
+.btn-outline--mt {
+  margin-top: 0.5rem;
+}
+
+/* Apple badge centered — replaces style="margin:0.5rem auto;display:inline-flex" */
+.apple-badge--centered {
+  margin: 0.5rem auto;
+  display: inline-flex;
+}
+
+/* HSC (hero sticker cluster) — replaces all inline style= on cluster items */
+.hsc-sticker-a {
+  width:  clamp(44px, 8vw, 68px);
+  height: clamp(44px, 8vw, 68px);
+  font-size: clamp(0.45rem, 1.1vw, 0.58rem);
+  animation: sticker-float-a 3.9s ease-in-out infinite;
+}
+.hsc-sticker-b {
+  width:  clamp(44px, 8vw, 70px);
+  height: clamp(44px, 8vw, 70px);
+  font-size: clamp(0.45rem, 1.1vw, 0.58rem);
+  animation: sticker-float-b 4s ease-in-out infinite 0.5s;
+}
+.hsc-sticker-c {
+  width:  clamp(42px, 7.5vw, 66px);
+  height: clamp(42px, 7.5vw, 66px);
+  font-size: clamp(0.43rem, 1vw, 0.56rem);
+  animation: sticker-float-c 3.6s ease-in-out infinite;
+}
+/* Badge rotation variants */
+.hsc-badge-rot-pos { transform: rotate(8deg); }
+.hsc-badge-rot-neg { transform: rotate(-6deg); }
+
+/* Icon span inside cluster circles */
+.hsc-icon {
+  font-size: clamp(0.75rem, 1.8vw, 1rem);
+  line-height: 1;
+  display: block;
+}
+
+/* Detroit Made blob sticker */
+.hsc-blob-wrap {
+  position: relative;
+  animation: sticker-float-d 4.5s ease-in-out infinite;
+  transform: rotate(-10deg);
+  display: inline-block;
+}
+.hsc-blob-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #1a0033;
+  font-family: var(--font-stamp);
+  font-size: clamp(0.4rem, 1vw, 0.58rem);
+  text-align: center;
+  line-height: 1.1;
+  pointer-events: none;
+}
+
+/* ======================================================
+   ░░ ABOUT PAGE — classes to replace inline styles
+   ====================================================== */
+
+/* Page hero h1 — replaces inline font-size + color + margin-top */
+.about-page-h1 {
+  color: var(--accent);
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-top: 0.5rem;
+}
+
+/* Story section CTA row — replaces inline margin-top + display + gap + flex-wrap */
+.about-story-ctas {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+/* Hosts section divider — replaces inline margin: 0 auto */
+.hosts-divider {
+  margin: 0 auto 1.75rem;
+}
+
+/* Hosts intro paragraph — replaces inline color + max-width + margin + text-align + font-size */
+.hosts-intro {
+  color: var(--text-muted);
+  max-width: 520px;
+  margin: 0.75rem auto 0;
+  text-align: center;
+  font-size: 0.93rem;
+}
+
+/* Platform strip divider — replaces inline margin: 0 auto 0 */
+.platforms-divider {
+  margin: 0 auto 0;
+}
+
+/* ============================================================
+   ░░ COLLECTIVE — ADDITIONS v6.2
+   Announcement Bar · Collective Spotlight · Show Cards
+   ============================================================ */
+
+/* ======================================================
+   ░░ ANNOUNCEMENT BAR — Top of Site
+   Sits above the sticky navbar; scrolls away naturally.
+   Gold "Standard" vibe, dark text, accessible contrast.
+   ====================================================== */
+.announcement-bar {
+  background: var(--accent);
+  color: var(--bg-deeper);
+  padding: 0.65rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  position: relative;
+  z-index: 1001;
+  border-bottom: 2px solid var(--bg-deeper);
+  font-family: var(--font-body);
+}
+.announcement-bar-inner {
+  width: 90%;
+  max-width: var(--container-w);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  line-height: 1.4;
+}
+.announcement-bar-icon {
+  display: inline-flex;
+  font-size: 1rem;
+  line-height: 1;
+}
+.announcement-bar-text {
+  color: var(--bg-deeper);
+}
+.announcement-bar-link {
+  color: var(--bg-deeper);
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color var(--transition), gap var(--transition);
+  white-space: nowrap;
+}
+.announcement-bar-link:hover,
+.announcement-bar-link:focus {
+  color: var(--bg-card);
+  gap: 0.45rem;
+}
+.announcement-bar-link .ab-arrow {
+  display: inline-block;
+  transition: transform var(--transition);
+}
+.announcement-bar-link:hover .ab-arrow,
+.announcement-bar-link:focus .ab-arrow {
+  transform: translateX(3px);
+}
+
+@media (max-width: 600px) {
+  .announcement-bar { font-size: 0.78rem; padding: 0.55rem 0.75rem; }
+  .announcement-bar-inner { gap: 0.35rem; }
+}
+@media (max-width: 380px) {
+  .announcement-bar { font-size: 0.72rem; }
+}
+
+/* ======================================================
+   ░░ COLLECTIVE SPOTLIGHT — Homepage section
+   Sits above footer caution tape. 50/50 desktop, stacked
+   mobile. Gold-glow seal on left, copy + CTA on right.
+   ====================================================== */
+.collective-spotlight-section {
+  background: linear-gradient(135deg, var(--bg-deeper) 0%, var(--bg-dark) 60%, var(--bg-deeper) 100%);
+  padding: var(--section-pad) 0;
+  border-top: 1px solid var(--border-gold);
+  border-bottom: 1px solid var(--border-gold);
+  position: relative;
+  overflow: hidden;
+}
+.collective-spotlight-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(244,211,94,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+.collective-spotlight-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 4rem;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.collective-spotlight-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.collective-spotlight-seal {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 24px rgba(244,211,94,0.28))
+          drop-shadow(0 12px 32px rgba(0,0,0,0.55));
+  animation: logo-glow-pulse 4s ease-in-out infinite;
+}
+.collective-spotlight-text { display: flex; flex-direction: column; gap: 0.5rem; }
+.collective-spotlight-text .section-heading {
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.collective-spotlight-text p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.78;
+  margin-bottom: 1.5rem;
+  max-width: 540px;
+}
+.collective-spotlight-actions {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+@media (max-width: 860px) {
+  .collective-spotlight-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    text-align: center;
+  }
+  .collective-spotlight-visual { order: -1; }
+  .collective-spotlight-text { align-items: center; }
+  .collective-spotlight-text p { margin-left: auto; margin-right: auto; }
+  .collective-spotlight-actions { justify-content: center; }
+  .collective-spotlight-text .divider-accent { margin-left: auto; margin-right: auto; }
+}
+@media (max-width: 480px) {
+  .collective-spotlight-actions { flex-direction: column; align-items: stretch; width: 100%; }
+  .collective-spotlight-actions .btn-primary,
+  .collective-spotlight-actions .btn-outline { justify-content: center; }
+  .collective-spotlight-seal { max-width: 240px; }
+}
+
+/* ======================================================
+   ░░ COLLECTIVE PAGE — Hero, Intro, Show Grid
+   Show cards extend the existing card system (matches
+   archive-panel border / hover language).
+   ====================================================== */
+
+/* Page hero — collective variant uses existing .page-hero */
+.collective-page-h1 {
+  color: var(--accent);
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  margin-top: 0.5rem;
+  line-height: 1.1;
+}
+.collective-page-hero-stickers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 4;
+}
+.collective-hero-sticker {
+  position: absolute;
+}
+.cps-1 { top: 22px; left: 5%; }
+.cps-2 { top: 28px; right: 6%; }
+.cps-3 { bottom: 16px; left: 7%; }
+.cps-4 { bottom: 20px; right: 7%; }
+
+/* Intro section */
+.collective-intro-section {
+  background: var(--bg-dark);
+  padding: 4rem 0 2.5rem;
+}
+.collective-intro-text {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1.02rem;
+  line-height: 1.8;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* Shows section */
+.collective-shows-section {
+  background: var(--bg-dark);
+  padding: 2.5rem 0 var(--section-pad);
+}
+.show-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.75rem;
+  margin-top: 3rem;
+}
+.show-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+.show-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 28px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(244,211,94,0.18);
+  border-color: rgba(244,211,94,0.45);
+  z-index: 2;
+}
+.show-card--flagship {
+  border-color: rgba(244,211,94,0.4);
+  box-shadow: 0 0 28px rgba(244,211,94,0.08), 0 12px 32px rgba(0,0,0,0.4);
+}
+.show-card-flag {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 3;
+  background: var(--accent);
+  color: var(--bg-deeper);
+  font-family: var(--font-stamp);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  padding: 0.28rem 0.75rem;
+  border-radius: 50px;
+  border: 2px solid var(--bg-deeper);
+  transform: rotate(4deg);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+}
+.show-card-image-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(135deg, var(--bg-deeper) 0%, #2a0a44 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-card);
+  overflow: hidden;
+  position: relative;
+}
+.show-card-image-wrap img {
+  max-width: 80%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.5));
+}
+.show-card-image-placeholder {
+  font-family: var(--font-stamp);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  text-align: center;
+  opacity: 0.85;
+  padding: 0 1rem;
+  line-height: 1.2;
+}
+.show-card-body {
+  padding: 1.5rem 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  flex: 1;
+}
+.show-card-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.show-card-eyebrow--flagship { color: var(--accent); }
+.show-card-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--accent);
+  line-height: 1.2;
+}
+.show-card-desc {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.84);
+  line-height: 1.72;
+  flex: 1;
+}
+.show-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.6rem;
+}
+.show-card-actions .btn-primary,
+.show-card-actions .btn-outline,
+.show-card-actions .btn-red {
+  font-size: 0.82rem;
+  padding: 0.55rem 1.1rem;
+}
+
+@media (max-width: 480px) {
+  .show-card-actions { flex-direction: column; align-items: stretch; }
+  .show-card-actions .btn-primary,
+  .show-card-actions .btn-outline,
+  .show-card-actions .btn-red { justify-content: center; }
+  .show-grid { grid-template-columns: 1fr; }
+}
+
+/* ======================================================
+   ░░ COLLECTIVE PLAYLISTS SECTION
+   Spotify + SoundCloud playlist embeds.
+   ====================================================== */
+.collective-playlists-section {
+  background: var(--bg-deeper);
+  padding: var(--section-pad) 0;
+  border-top: 1px solid var(--border-gold);
+}
+.collective-playlists-section .section-heading { color: var(--accent); }
+.collective-playlists-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+.collective-playlist-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.collective-playlist-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+}
+.collective-playlist-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.collective-playlist-card-header svg { flex-shrink: 0; }
+.collective-playlist-card-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--accent);
+  line-height: 1.25;
+}
+.collective-playlist-card-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-top: 0.15rem;
+}
+.collective-playlist-card .spotify-player-wrap {
+  border: 1px solid var(--border-gold);
+  border-radius: 8px;
+}
+.collective-playlist-card .spotify-player-wrap iframe { height: 352px; }
+.collective-playlist-soundcloud-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: auto;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--accent);
+  padding: 0.7rem 1rem;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  background: transparent;
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+  align-self: flex-start;
+}
+.collective-playlist-soundcloud-link:hover {
+  background: var(--accent);
+  color: var(--bg-deeper);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 860px) {
+  .collective-playlists-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+
+/* ============================================================
+   ░░ COLLECTIVE — ADDITIONS v6.3
+   Local Video Player · Unmute Button · Collective Stamp
+   Network Row · Footer Stamp · Live Feed Embeds
+   ============================================================ */
+
+/* ── Override announcement bar to spec gold #D4AF37 ── */
+.announcement-bar {
+  background: #D4AF37;
+}
+
+/* ======================================================
+   ░░ LOCAL VIDEO PLAYER (Homepage Welcome Reel)
+   ====================================================== */
+.local-video-player {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius);
+  display: block;
+  background: #000;
+  object-fit: cover;
+  box-shadow:
+    0 0 40px rgba(244,211,94,0.08),
+    0 24px 64px rgba(0,0,0,0.6);
+}
+
+.video-unmute-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.45rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 10;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  backdrop-filter: blur(4px);
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.video-unmute-btn:hover,
+.video-unmute-btn:focus {
+  background: rgba(212, 175, 55, 0.95);
+  color: #1a0033;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+  .video-unmute-btn { font-size: 0.7rem; padding: 0.35rem 0.7rem; bottom: 8px; right: 8px; }
+}
+
+/* ======================================================
+   ░░ COLLECTIVE STAMP
+   Used on collective.html hero AND homepage spotlight.
+   ====================================================== */
+.collective-stamp-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.75rem;
+}
+
+.collective-stamp-wrap img {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  display: block;
+  filter:
+    drop-shadow(0 0 14px rgba(212,175,55,0.45))
+    drop-shadow(0 0 32px rgba(212,175,55,0.18));
+  animation: collective-stamp-pulse 4s ease-in-out infinite;
+}
+
+@keyframes collective-stamp-pulse {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 14px rgba(212,175,55,0.45))
+      drop-shadow(0 0 32px rgba(212,175,55,0.18));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 22px rgba(212,175,55,0.65))
+      drop-shadow(0 0 48px rgba(212,175,55,0.28));
+  }
+}
+
+/* Variant for the homepage spotlight section — larger */
+.collective-spotlight-stamp {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  display: block;
+  filter:
+    drop-shadow(0 0 18px rgba(212,175,55,0.5))
+    drop-shadow(0 0 40px rgba(212,175,55,0.2))
+    drop-shadow(0 12px 32px rgba(0,0,0,0.55));
+  animation: collective-stamp-pulse 4s ease-in-out infinite;
+}
+
+@media (max-width: 480px) {
+  .collective-spotlight-stamp { max-width: 220px; }
+  .collective-stamp-wrap img  { max-width: 170px; }
+}
+
+/* ======================================================
+   ░░ NETWORK ROW — homepage strip above footer
+   Minimal horizontal row of show names.
+   ====================================================== */
+.network-row-section {
+  background: var(--bg-deeper);
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--border-gold);
+}
+.network-row-label {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+}
+.network-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem 2.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+}
+.network-row a {
+  color: var(--text-white);
+  position: relative;
+  transition: color var(--transition);
+  padding: 0.25rem 0;
+}
+.network-row a:hover,
+.network-row a:focus {
+  color: var(--accent);
+}
+.network-row a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+.network-row a:hover::after,
+.network-row a:focus::after { width: 100%; }
+.network-row .network-row-divider {
+  color: var(--accent);
+  opacity: 0.5;
+  user-select: none;
+  font-size: 0.9em;
+}
+@media (max-width: 600px) {
+  .network-row { gap: 0.65rem 1.25rem; }
+  .network-row .network-row-divider { display: none; }
+}
+
+/* ======================================================
+   ░░ FOOTER COLLECTIVE BLOCK
+   New row inside footer for collective stamp + link.
+   ====================================================== */
+.footer-collective {
+  width: 100%;
+  border-top: 1px solid rgba(244,211,94,0.12);
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.footer-collective-stamp {
+  height: 56px;
+  width: auto;
+  display: block;
+  filter:
+    drop-shadow(0 0 10px rgba(212,175,55,0.4))
+    drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  transition: transform var(--transition);
+}
+.footer-collective-stamp:hover { transform: scale(1.05); }
+.footer-collective-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.3;
+}
+.footer-collective-eyebrow {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.footer-collective-link {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.footer-collective-link .fc-arrow {
+  display: inline-block;
+  transition: transform var(--transition);
+}
+.footer-collective-link:hover { opacity: 0.85; }
+.footer-collective-link:hover .fc-arrow { transform: translateX(3px); }
+
+@media (max-width: 480px) {
+  .footer-collective { flex-direction: column; text-align: center; gap: 0.65rem; }
+  .footer-collective-text { align-items: center; }
+}
+
+/* ======================================================
+   ░░ COLLECTIVE LIVE FEED — SoundCloud + Spotify embeds
+   ====================================================== */
+.collective-livefeed-section {
+  background: var(--bg-deeper);
+  padding: var(--section-pad) 0;
+  border-top: 1px solid var(--border-gold);
+  border-bottom: 1px solid var(--border-gold);
+}
+.collective-livefeed-section .section-heading { color: var(--accent); }
+.collective-livefeed-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2.75rem;
+}
+.collective-livefeed-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+.collective-livefeed-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+  border-color: rgba(244,211,94,0.32);
+}
+.collective-livefeed-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+.collective-livefeed-header svg { flex-shrink: 0; }
+.collective-livefeed-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--accent);
+  line-height: 1.25;
+  margin: 0;
+}
+.collective-livefeed-sub {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-top: 0.2rem;
+}
+.collective-livefeed-embed {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-gold);
+  background: #000;
+}
+.collective-livefeed-embed iframe {
+  width: 100%;
+  display: block;
+  border: 0;
+}
+.collective-livefeed-embed--spotify iframe { height: 352px; }
+.collective-livefeed-embed--soundcloud iframe { height: 166px; }
+.collective-livefeed-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+.collective-livefeed-cta-row .btn-outline,
+.collective-livefeed-cta-row .btn-primary {
+  font-size: 0.82rem;
+  padding: 0.55rem 1.1rem;
+}
+
+@media (max-width: 860px) {
+  .collective-livefeed-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+@media (max-width: 480px) {
+  .collective-livefeed-card { padding: 1.25rem; }
+  .collective-livefeed-cta-row { flex-direction: column; align-items: stretch; }
+  .collective-livefeed-cta-row .btn-outline,
+  .collective-livefeed-cta-row .btn-primary { justify-content: center; }
+}
+
+/* ============================================================
+   ░░ MOBILE NAV BUG FIX v6.4
+   When mobile menu is open, lift the hamburger button above
+   the fullscreen menu overlay so it remains tappable to toggle
+   the menu closed. Without this, the .mobile-menu (z-index:1200)
+   intercepts pointer events on the hamburger underneath it.
+   ============================================================ */
+.hamburger[aria-expanded="true"] {
+  position: relative;
+  z-index: 1400;
+}
+
+/* ============================================================
+   ░░ COLLECTIVE — ADDITIONS v6.5
+   Mini media-network show grid hover · single-card playlist layout
+   ============================================================ */
+
+/* Enhanced hover for show cards — mini media network feel */
+.show-card {
+  /* keeps existing transition; adds scale alongside translateY */
+  will-change: transform;
+}
+.show-card:hover,
+.show-card:focus-within {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow:
+    0 28px 56px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(244,211,94,0.18),
+    0 0 32px rgba(244,211,94,0.08);
+  border-color: rgba(244,211,94,0.42);
+}
+.show-card--flagship:hover,
+.show-card--flagship:focus-within {
+  box-shadow:
+    0 28px 56px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(244,211,94,0.32),
+    0 0 40px rgba(244,211,94,0.18);
+}
+@media (prefers-reduced-motion: reduce) {
+  .show-card,
+  .show-card:hover,
+  .show-card:focus-within { transform: none !important; }
+}
+@media (max-width: 480px) {
+  /* Disable scale on small touch screens — reads as wobble, not polish */
+  .show-card:hover,
+  .show-card:focus-within { transform: translateY(-4px); }
+}
+
+/* Single-card centered layout for the main media (Spotify) section */
+.collective-livefeed-single {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.75rem;
+}
+.collective-livefeed-single .collective-livefeed-card {
+  width: 100%;
+  max-width: 760px;
+}
+.collective-livefeed-card--featured {
+  border-color: rgba(244,211,94,0.32);
+  box-shadow:
+    0 0 32px rgba(244,211,94,0.08),
+    0 16px 40px rgba(0,0,0,0.45);
+}
+.collective-livefeed-intro {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.75;
+  max-width: 580px;
+  margin: 1rem auto 0;
+}
+
+
+/* ============================================================
+   ░░ CONTACT PAGE — extracted from inline <style> v6.5
+   ============================================================ */
+/* ── Contact page specific ── */
+    .contact-hero-section {
+      background: radial-gradient(ellipse at 50% 60%, #3d1266 0%, var(--bg-dark) 70%);
+      padding: 6rem 1.5rem 5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border-gold);
+    }
+    .contact-hero-section h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .contact-hero-section p {
+      color: var(--text-muted);
+      max-width: 540px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    /* Full contact section */
+    .contact-full-section {
+      background: var(--bg-dark);
+      padding: var(--section-pad) 0;
+    }
+
+    .contact-full-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .contact-full-grid { grid-template-columns: 1fr; gap: 3rem; }
+    }
+
+    /* Info column */
+    .contact-info-col h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .contact-info-col > p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.78;
+      margin-bottom: 2.25rem;
+    }
+
+    /* Contact method list */
+    .contact-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-method {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.1rem 1.25rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+    }
+    .contact-method:hover {
+      background: rgba(244,211,94,0.06);
+      border-color: rgba(244,211,94,0.22);
+      transform: translateX(4px);
+    }
+
+    .contact-method-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(244,211,94,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+    }
+    .contact-method-icon svg { width: 20px; height: 20px; }
+
+    .contact-method-text { }
+    .contact-method-label {
+      display: block;
+      font-weight: 700;
+      color: var(--text-white);
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+    .contact-method-value {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* FAQ block */
+    .faq-block {
+      margin-top: 2.5rem;
+    }
+    .faq-block h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--text-white);
+      margin-bottom: 1rem;
+    }
+    .faq-item {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+    .faq-a {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* Form column */
+    .contact-form-col { }
+
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      padding: 2.25rem 2rem;
+    }
+
+    .form-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-card > p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-bottom: 1.75rem;
+      line-height: 1.65;
+    }
+
+    /* Thank-you section */
+    .thanks-section {
+      background: var(--bg-deeper);
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+    .thanks-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .thanks-section p {
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 1.75rem;
+      font-size: 0.93rem;
+      line-height: 1.7;
+    }
+
+/* ============================================================
+   ░░ MOBILE MENU — NAVBAR OVERLAP FIX (v6.7 + v6.9 + v7.0)
+   When the mobile menu is open, the sticky navbar sits at
+   z-index 1300 (bumped by the menu IIFE so the hamburger
+   stays tappable). That worked, but its opaque background
+   covered the first menu item ("Episodes"). When the menu
+   is open we make the navbar background + border transparent
+   so the menu's solid background shows through everywhere.
+
+   v6.9 follow-ups:
+   1. Hide ALL nav-right children (btn-primary, btn-red, btn-outline,
+      nav-icons) when menu is open — not just btn-primary.
+   2. Hide the X close button. Hamburger toggle does the same job.
+
+   v7.0 follow-ups (the "Episodes link doesn't work at top of page"
+   fix). Reproduction: at scrollY=0 the announcement bar (~99px)
+   sits in the document flow and the navbar sticks below it. Even
+   though the menu is at z-index 1200 and elementFromPoint reports
+   the menu link as topmost, real iOS Safari taps were getting
+   swallowed by the still-laid-out (just visibility:hidden) header
+   children — the sticky navbar's transparent strip + the absolutely
+   positioned X close button + the desktop CTA buttons. Three fixes:
+
+   1. Selectors now use `body.menu-open ...` (toggled in JS) as the
+      primary mechanism. `:has(#mobileMenu.open)` kept as a defensive
+      fallback for any browser where the body-class toggle hasn't run.
+   2. `display: none` replaces `visibility: hidden`. Hidden but
+      laid-out elements can still intercept touches in some Safari
+      builds. display:none removes them from layout entirely.
+   3. The announcement bar is also hidden while the menu is open.
+
+   v7.0.1 fix: keep .nav-right visible (so the hamburger stays
+   anchored top-right via flex layout) but hide its non-hamburger
+   children. If we display:none the whole nav-right or its CTA
+   children directly, the hamburger reflows from its right-edge
+   position to the left edge of the navbar, which moves it out
+   from under the user's thumb after they've already opened the
+   menu, making the close-toggle hard to find. Hiding only the
+   specific children (logo, nav, CTAs, social icons) preserves
+   the layout while emptying the visual space.
+   ============================================================ */
+/* ============================================================
+   ░░ MOBILE MENU — TOUCH FIX (v7.1, per spec)
+   Per spec: "Mobile navigation bug is caused by elements using
+   visibility: hidden, which still intercept touch events on iOS
+   Safari. Replace ALL instances of visibility: hidden in the
+   mobile menu state with display: none so those elements are
+   removed from layout and cannot block taps."
+
+   All previously-`visibility: hidden` rules now use `display: none`.
+   `pointer-events: none` added as a defensive second layer in case
+   any browser's CSS engine evaluates display rules late.
+
+   Also adds .menu-open scroll-lock class on body — replaces the
+   inline `body.style.overflow = 'hidden'` that was set in JS.
+   ============================================================ */
+body.menu-open #navbar,
+body:has(#mobileMenu.open) #navbar {
+  background: transparent;
+  border-bottom-color: transparent;
+}
+
+body.menu-open .announcement-bar,
+body:has(#mobileMenu.open) .announcement-bar,
+body.menu-open #navbar .nav-logo,
+body:has(#mobileMenu.open) #navbar .nav-logo,
+body.menu-open #navbar > .container > nav,
+body:has(#mobileMenu.open) #navbar > .container > nav,
+body.menu-open #navbar .nav-right > a,
+body.menu-open #navbar .nav-right .btn-primary,
+body.menu-open #navbar .nav-right .btn-red,
+body.menu-open #navbar .nav-right .btn-outline,
+body.menu-open #navbar .nav-right .nav-icons,
+body:has(#mobileMenu.open) #navbar .nav-right > a,
+body:has(#mobileMenu.open) #navbar .nav-right .btn-primary,
+body:has(#mobileMenu.open) #navbar .nav-right .btn-red,
+body:has(#mobileMenu.open) #navbar .nav-right .btn-outline,
+body:has(#mobileMenu.open) #navbar .nav-right .nav-icons {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* Body scroll-lock when mobile menu is open. Replaces the
+   previously-inlined `document.body.style.overflow = 'hidden'`. */
+body.menu-open {
+  overflow: hidden;
+}
+
+/* X close button — redundant with hamburger toggle, so hide it.
+   Kept in DOM for screen readers and as a JS fallback. */
+.mobile-close {
+  display: none;
+  pointer-events: none;
+}
+
+/* Closed mobile menu must not intercept touches. The base
+   .mobile-menu rule uses `display: none` already; this adds
+   pointer-events:none as a belt-and-braces guarantee on browsers
+   where display:none might be transitioning. The .open class then
+   restores pointer-events:auto. */
+.mobile-menu:not(.open) {
+  pointer-events: none;
+}
+.mobile-menu.open {
+  pointer-events: auto;
+}
+
+/* ============================================================
+   ░░ INLINE-STYLE MIGRATION (v6.8)
+   These rules replace inline style="..." attributes that were
+   carried over from the original templates on episodes.html
+   and watch.html. Visual output is unchanged; the markup is
+   simply cleaner and now respects the no-inline-CSS rule.
+   ============================================================ */
+
+/* Page hero overflow + sticker overlay positioning helpers
+   (parallels the existing collective-page-hero-stickers pattern) */
+.page-hero--overflow-visible { overflow: visible; }
+
+.page-hero-stickers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 4;
+}
+
+.page-hero-container--layered {
+  position: relative;
+  z-index: 5;
+}
+
+.page-hero-h1--gold {
+  color: var(--accent);
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-top: 0.5rem;
+}
+
+/* Hero sticker placements (replace inline top/right/bottom/left/size) */
+.hero-sticker--mic {
+  width: 60px;
+  height: 60px;
+  font-size: 0.54rem;
+  top: 22px;
+  left: 5%;
+  animation: sticker-float-a 3.8s ease-in-out infinite;
+  position: absolute;
+}
+.hero-sticker--mic-lg {
+  width: 62px;
+  height: 62px;
+  font-size: 0.54rem;
+  top: 22px;
+  left: 5%;
+  animation: sticker-float-a 3.8s ease-in-out infinite;
+  position: absolute;
+}
+.hero-sticker--green {
+  width: 58px;
+  height: 58px;
+  font-size: 0.52rem;
+  bottom: 14px;
+  left: 8%;
+  animation: sticker-float-b 4.1s ease-in-out infinite 0.5s;
+  position: absolute;
+}
+.hero-sticker-icon-md { font-size: 0.85rem; }
+.hero-sticker-icon-lg { font-size: 0.88rem; }
+.hero-sticker--badge-tr {
+  top: 28px;
+  right: 6%;
+  transform: rotate(5deg);
+  position: absolute;
+}
+.hero-sticker--badge-br {
+  bottom: 20px;
+  right: 7%;
+  transform: rotate(-6deg);
+  position: absolute;
+}
+
+/* Hero CTA cluster (centered button row beneath H1) */
+.hero-cta-cluster {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.75rem;
+}
+.btn-primary--sm,
+.btn-outline--sm,
+.btn-red--sm {
+  font-size: 0.85rem;
+  padding: 0.55rem 1.3rem;
+}
+
+/* Section background utilities (used by #latest-drop, #archive-grid,
+   #youtube-player, #tiktok-feed) */
+.section--dark    { background: var(--bg-dark);    padding: var(--section-pad) 0; }
+.section--deeper  { background: var(--bg-deeper);  padding: var(--section-pad) 0; }
+
+/* "NOW PLAYING" pulse pill that lives above latest-drop heading */
+.now-playing-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--sticker-pink);
+  color: #fff;
+  font-family: var(--font-stamp);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 50px;
+  border: 2px solid var(--bg-deeper);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.now-playing-pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  display: inline-block;
+  animation: blink-dot 1.2s ease-in-out infinite;
+}
+
+/* Section heading colour modifiers */
+.section-heading--gold  { color: var(--accent); }
+.section-heading--white { color: var(--text-white); }
+
+/* Inline icon adjacent to text in headings */
+.heading-icon-inline {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.4rem;
+}
+
+/* Section subhead */
+.section-subhead-muted {
+  color: var(--text-muted);
+  font-size: 0.93rem;
+}
+.section-subhead-muted--top { margin-top: 0.75rem; }
+.section-subhead-muted--bottom-zero { margin-bottom: 0; }
+.section-subhead-muted--small {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+}
+
+/* Center-aligned section labels and headings (page-hero variants) */
+.section-label--center-block { text-align: center; display: block; }
+.section-heading--center-gold  { text-align: center; color: var(--accent); }
+.section-heading--center-white { text-align: center; color: var(--text-white); }
+
+/* Spacing utility wrappers for reused layout patterns */
+.text-center--mb-1   { text-align: center; margin-bottom: 1rem; }
+.text-center--mb-2   { text-align: center; margin-bottom: 2rem; }
+.center-row {
+  text-align: center;
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.center-row--mt-3 { margin-top: 3rem; }
+.center-row--mt-2 { margin-top: 2rem; }
+
+.divider-accent--center { margin: 0 auto; }
+.divider-accent--center-mb { margin: 0 auto 1rem; }
+
+.text-center-muted-top {
+  text-align: center;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  font-size: 0.93rem;
+}
+.text-center-muted-thin {
+  text-align: center;
+  color: var(--text-muted);
+  margin-top: 1rem;
+  font-size: 0.93rem;
+  margin-bottom: 0;
+}
+
+/* Small bottom block of an archive section */
+.archive-footer-note {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* Watch page: media-section-label spacing variant */
+.media-section-label--mt { margin-top: 1.25rem; }
+
+/* Watch page: TikTok embed sizing */
+.tiktok-embed--responsive {
+  max-width: 780px;
+  min-width: 288px;
+  width: 100%;
+}
+
+/* Contact page tiny utilities */
+.text-accent { color: var(--accent); }
+.row-center-wrap {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Archive footer CTA wrapper (text-align:center;margin-top:3rem;) */
+.archive-footer-cta { text-align: center; margin-top: 3rem; }
+
+/* TikTok footer CTA wrapper (text-align:center;margin-top:2rem;) */
+.text-center-row-mt-2 { text-align: center; margin-top: 2rem; }
+
+/* ============================================================
+   ░░ SHOW CARD — SPOTIFY EMBED + LISTEN BUTTON (v7.2)
+   In-card Spotify show embed and prominent Spotify-branded
+   "Listen on Spotify" CTA. Designed to scale cleanly: cards
+   keep their existing structure, the embed slots between
+   description and action row, and the new Spotify button
+   sits below the action row as a primary-emphasis CTA.
+   ============================================================ */
+
+/* Spotify embed wrapper — matches the existing .collective-livefeed-embed
+   visual treatment (gold border, radius, dark background). */
+.show-card-spotify-embed {
+  width: 100%;
+  margin: 0.5rem 0 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-gold);
+  background: #000;
+  line-height: 0;
+}
+.show-card-spotify-embed iframe {
+  width: 100%;
+  display: block;
+  border: 0;
+  height: 232px;
+}
+
+/* Prominent "Listen on Spotify" button — Spotify brand green,
+   slightly stronger visual weight than the existing red/gold/outline
+   action buttons so it reads as the primary "go to Spotify" CTA. */
+.btn-spotify {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 0.85rem;
+  padding: 0.8rem 1.25rem;
+  background: #1DB954;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 2px solid #1DB954;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 14px rgba(29, 185, 84, 0.18);
+}
+.btn-spotify:hover,
+.btn-spotify:focus {
+  background: #1ED760;
+  border-color: #1ED760;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(29, 185, 84, 0.32);
+  color: #fff;
+}
+.btn-spotify-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .btn-spotify { font-size: 0.85rem; padding: 0.7rem 1rem; }
+  .show-card-spotify-embed iframe { height: 232px; }
+}
+
+/* ============================================================
+   ░░ SHOW CARD — SECONDARY LINKS + CROSS-PROMO (v7.3)
+   Per spec: "high-conversion listening funnel — preview content
+   via embeds, immediately continue listening on Spotify, are
+   guided to explore additional podcasts on the same page."
+
+   The existing .btn-spotify keeps its primary emphasis (green
+   Spotify-brand button). These new rules style the secondary
+   tier (website/YouTube links) and the cross-promotion line
+   beneath each card so they read as supporting content, not
+   competition for the primary CTA.
+   ============================================================ */
+
+/* Secondary links row — text-style with arrows, lower visual weight */
+.show-card-secondary-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(244, 211, 94, 0.10);
+}
+.show-card-secondary-link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: color var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.show-card-secondary-link:hover,
+.show-card-secondary-link:focus {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Cross-promotion line — soft gold callout that points to another
+   show on the same page. Anchor-link target uses scroll-margin so
+   the destination show isn't hidden behind the sticky navbar.
+
+   v7.4 update: cross-promo is now a single pill-style anchor element
+   ("Keep listening: <show name>"). Subtle low-opacity bg, thin border,
+   CSS-generated arrow with rightward motion on hover, and a slight
+   press scale-down for mobile tap feedback. Designed to read as a
+   subtle "next step" cue, not a heavy CTA. */
+.show-card-crosspromo {
+  /* Spec: inline-block, slight padding (6-12px), fully rounded, very
+     light bg, thin low-opacity border, small top margin to separate
+     cleanly from the content above. */
+  display: inline-flex;
+  align-items: center;
+  margin-top: 1.1rem;
+  padding: 0.45rem 0.95rem 0.45rem 0.95rem;
+  border-radius: 999px;
+  background: rgba(244, 211, 94, 0.06);
+  border: 1px solid rgba(244, 211, 94, 0.18);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  line-height: 1;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    transform var(--transition);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* CSS-generated arrow (per spec: not hardcoded text). Pseudo-element
+   keeps the markup clean and gives us full control over the hover
+   motion. */
+.show-card-crosspromo::after {
+  content: "→";
+  display: inline-block;
+  margin-left: 0.5rem;
+  font-size: 0.95em;
+  color: var(--accent);
+  transition: transform var(--transition), color var(--transition);
+  will-change: transform;
+}
+
+.show-card-crosspromo:hover,
+.show-card-crosspromo:focus-visible {
+  background: rgba(244, 211, 94, 0.12);
+  border-color: rgba(244, 211, 94, 0.35);
+  color: var(--text-white);
+  transform: translateY(-1px);
+  outline: none;
+}
+.show-card-crosspromo:hover::after,
+.show-card-crosspromo:focus-visible::after {
+  transform: translateX(3px);
+  color: var(--accent);
+}
+
+/* Mobile press feedback — subtle scale down on active state */
+.show-card-crosspromo:active {
+  transform: scale(0.98);
+  background: rgba(244, 211, 94, 0.16);
+}
+
+/* Small phone — tighten padding slightly so the pill stays compact
+   when the show name pushes width close to the column edge. */
+@media (max-width: 480px) {
+  .show-card-crosspromo {
+    font-size: 0.74rem;
+    padding: 0.4rem 0.85rem;
+  }
+}
+
+/* Anchor scroll offset so cross-promo links don't drop the target
+   show behind the sticky navbar (~99px tall when announcement bar
+   is showing; safe value covers it). */
+.show-card[id] {
+  scroll-margin-top: 110px;
+}
+
+/* ============================================================
+   ░░ CROSS-PROMO WRAPPER + SCROLL UX (v7.5)
+   Per spec: separate the "Keep listening:" label from the show
+   name link so the show name pill can wrap as a single unit on
+   mobile instead of breaking awkwardly mid-phrase.
+
+   The existing .show-card-crosspromo styles (pill background,
+   border, hover lift, ::after arrow) remain in effect on the
+   anchor — we just add the wrapper + label rules and a
+   white-space:nowrap belt-and-braces guard on .cross-promo.
+
+   Also adds:
+   - html { scroll-behavior: smooth } for animated anchor jumps
+   - .podcast-section { scroll-margin-top: 100px } so each show
+     lands cleanly below the sticky navbar after a cross-promo tap
+   ============================================================ */
+
+/* Smooth in-page anchor scrolling — applies globally per spec.
+   Affects every anchor jump on every page (announcement bar
+   "Explore the Network →", cross-promo links, etc.). */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Respect users who have requested reduced motion in their OS. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Cross-promo wrapper: keeps "Keep listening:" label and the
+   show-name pill on the same line when there's room, wraps to
+   two lines cleanly on narrow screens with the pill staying
+   intact (white-space:nowrap on the pill prevents mid-name
+   line breaks). */
+.cross-promo-wrap {
+  margin-top: 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cross-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  opacity: 0.85;
+  line-height: 1;
+}
+
+/* Spec guard — keep the show-name link from wrapping mid-name.
+   The .show-card-crosspromo rule already handles the pill style. */
+.cross-promo {
+  white-space: nowrap;
+}
+
+/* When inside the new wrapper, neutralize the old top margin from
+   .show-card-crosspromo (the wrapper now owns the spacing). */
+.cross-promo-wrap .show-card-crosspromo {
+  margin-top: 0;
+}
+
+/* Spec: scroll offset so cross-promo anchor jumps land cleanly
+   under the sticky navbar instead of getting hidden behind it. */
+.podcast-section {
+  scroll-margin-top: 100px;
+}
+
+@media (max-width: 480px) {
+  .cross-label { font-size: 0.74rem; }
+}
