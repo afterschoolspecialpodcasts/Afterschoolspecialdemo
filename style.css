@@ -383,7 +383,7 @@ section { padding: var(--section-pad) 0; }
   position: fixed;
   inset: 0;
   background: var(--bg-deeper);
-  z-index: 1000;
+  z-index: 1200;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -399,7 +399,7 @@ section { padding: var(--section-pad) 0; }
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  z-index: 1100;
+  z-index: 1300;
   background: none;
   border: none;
   color: var(--accent);
@@ -1055,664 +1055,1636 @@ footer { background:var(--bg-deeper); border-top:1px solid rgba(244,211,94,0.1);
   margin: 0 auto 0;
 }
 
+/* ============================================================
+   ░░ COLLECTIVE — ADDITIONS v6.2
+   Announcement Bar · Collective Spotlight · Show Cards
+   ============================================================ */
+
 /* ======================================================
-   ░░ NEWSLETTER PAGE — modular additions
-   All classes prefixed nl- to avoid any collision.
-   Nothing below touches any existing rule above.
+   ░░ ANNOUNCEMENT BAR — Top of Site
+   Sits above the sticky navbar; scrolls away naturally.
+   Gold "Standard" vibe, dark text, accessible contrast.
    ====================================================== */
-
-/* ── Body class scopes page-specific overrides ── */
-.nl-body { overflow-x: hidden; }
-
-/* ── Reveal animation system ──
-   Elements start hidden; JS adds .nl-revealed when in view.
-   prefers-reduced-motion respected via @media below.
-*/
-.nl-reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.72s cubic-bezier(0.22,1,0.36,1),
-              transform 0.72s cubic-bezier(0.22,1,0.36,1);
-  will-change: opacity, transform;
-}
-.nl-reveal--delay-1 { transition-delay: 0.12s; }
-.nl-reveal--delay-2 { transition-delay: 0.24s; }
-.nl-reveal--delay-3 { transition-delay: 0.36s; }
-.nl-revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ── Eyebrow label ── */
-.nl-eyebrow {
-  display: inline-block;
-  font-family: var(--font-stamp);
-  font-size: clamp(0.8rem, 1.5vw, 1rem);
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 1.25rem;
-}
-
-/* ── Shared text helpers ── */
-.nl-body-text {
-  font-size: clamp(0.95rem, 1.6vw, 1.08rem);
-  color: var(--text-muted);
-  line-height: 1.8;
-  margin-bottom: 1.25rem;
-}
-.nl-sub-text {
-  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
-  color: var(--text-muted);
-  line-height: 1.75;
-  max-width: 560px;
-}
-.nl-section-header {
-  text-align: center;
-  margin-bottom: 3.5rem;
-}
-.nl-section-header .nl-sub-text {
-  margin: 0.75rem auto 0;
-}
-
-/* ── Hero CTA Button ── */
-.nl-btn-hero {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
+.announcement-bar {
   background: var(--accent);
-  color: var(--text-dark);
-  font-family: var(--font-body);
-  font-weight: 900;
-  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
-  padding: 1rem 2.25rem;
-  border-radius: 8px;
-  text-decoration: none;
-  border: 2px solid var(--accent);
-  transition: background 0.22s ease, transform 0.22s ease,
-              box-shadow 0.22s ease;
-  white-space: nowrap;
-}
-.nl-btn-hero:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(244,211,94,0.3);
-}
-.nl-btn-hero--lg {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  padding: 1.15rem 2.5rem;
-}
-
-/* ======================================================
-   ░░ NEWSLETTER HERO
-   ====================================================== */
-.nl-hero {
+  color: var(--bg-deeper);
+  padding: 0.65rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   position: relative;
-  min-height: 100svh;
+  z-index: 1001;
+  border-bottom: 2px solid var(--bg-deeper);
+  font-family: var(--font-body);
+}
+.announcement-bar-inner {
+  width: 90%;
+  max-width: var(--container-w);
+  margin: 0 auto;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  overflow: hidden;
-  padding: 7rem 1.5rem 6rem;
-}
-
-/* Layered background */
-.nl-hero-bg {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Background image — parallax target, GPU-composited */
-.nl-hero-img {
-  position: absolute;
-  inset: -8%;          /* overshoot so parallax shift never reveals edges */
-  background-image: url('images/newsletterbackground.jpg');
-  background-size: cover;
-  background-position: center 40%;
-  background-repeat: no-repeat;
-  will-change: transform;
-  transform: translateZ(0);   /* GPU layer */
-}
-
-/* Dark base overlay */
-.nl-hero-overlay-dark {
-  position: absolute;
-  inset: 0;
-  background: rgba(10, 0, 26, 0.62);
-}
-
-/* Gradient overlay — fades bottom to site BG for seamless merge */
-.nl-hero-overlay-grad {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(26,0,51,0.0) 0%,
-    rgba(26,0,51,0.0) 40%,
-    rgba(26,0,51,0.7) 75%,
-    var(--bg-dark) 100%
-  );
-}
-
-/* Animated glows — GPU-composited with opacity */
-.nl-hero-glow {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0;
-  animation: nl-glow-breathe 6s ease-in-out infinite;
-  will-change: opacity, transform;
-}
-.nl-hero-glow--1 {
-  width: 600px; height: 600px;
-  top: -100px; left: -150px;
-  background: radial-gradient(circle, rgba(244,211,94,0.18) 0%, transparent 70%);
-  animation-delay: 0s;
-}
-.nl-hero-glow--2 {
-  width: 500px; height: 500px;
-  bottom: 0; right: -100px;
-  background: radial-gradient(circle, rgba(61,18,102,0.55) 0%, transparent 70%);
-  animation-delay: 2s;
-}
-.nl-hero-glow--3 {
-  width: 400px; height: 400px;
-  top: 40%; left: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(244,211,94,0.08) 0%, transparent 70%);
-  animation-delay: 4s;
-}
-
-@keyframes nl-glow-breathe {
-  0%,100% { opacity: 0.4; transform: scale(1); }
-  50%      { opacity: 1;   transform: scale(1.08); }
-}
-.nl-hero-glow--3 {
-  animation-name: nl-glow-breathe-center;
-}
-@keyframes nl-glow-breathe-center {
-  0%,100% { opacity: 0.4; transform: translate(-50%,-50%) scale(1); }
-  50%      { opacity: 1;   transform: translate(-50%,-50%) scale(1.1); }
-}
-
-/* Hero content */
-.nl-hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 780px;
-  width: 100%;
-  margin: 0 auto;
-}
-
-.nl-hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(3.8rem, 12vw, 9rem);
-  line-height: 0.92;
-  color: var(--text-white);
-  letter-spacing: -0.02em;
-  margin-bottom: 1.5rem;
-  text-shadow: 0 4px 32px rgba(0,0,0,0.5);
-}
-
-.nl-hero-sub {
-  font-size: clamp(1rem, 2vw, 1.3rem);
-  color: var(--text-muted);
-  max-width: 520px;
-  margin: 0 auto 2.5rem;
-  line-height: 1.65;
-}
-
-.nl-hero-ctas {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-.nl-hero-free {
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.4);
-  letter-spacing: 0.05em;
-  font-weight: 500;
-}
-
-/* Scroll indicator */
-.nl-scroll-hint {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  color: rgba(255,255,255,0.3);
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-family: var(--font-body);
-  font-weight: 600;
-}
-.nl-scroll-line {
-  width: 1px;
-  height: 48px;
-  background: linear-gradient(to bottom, transparent, rgba(244,211,94,0.5));
-  animation: nl-scroll-drop 2s ease-in-out infinite;
-}
-@keyframes nl-scroll-drop {
-  0%   { opacity: 0; transform: scaleY(0); transform-origin: top; }
-  50%  { opacity: 1; transform: scaleY(1); }
-  100% { opacity: 0; transform: scaleY(1); transform-origin: bottom; }
-}
-
-/* ======================================================
-   ░░ NEWSLETTER INTRO
-   ====================================================== */
-.nl-intro {
-  background: var(--bg-dark);
-  padding: var(--section-pad) 0;
-}
-.nl-intro-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 4rem;
-  align-items: center;
-}
-.nl-intro-text .section-heading {
-  color: var(--text-white);
-  font-size: clamp(2rem, 4vw, 3.2rem);
-}
-
-/* Glassmorphism stat panel */
-.nl-intro-glass { display: flex; align-items: center; justify-content: center; }
-.nl-glass-panel {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(244,211,94,0.15);
-  border-radius: 20px;
-  padding: 2.5rem 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  width: 100%;
-  max-width: 320px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.4),
-              inset 0 1px 0 rgba(255,255,255,0.06);
-}
-.nl-glass-stat { text-align: center; }
-.nl-stat-num {
-  display: block;
-  font-family: var(--font-stamp);
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
-  color: var(--accent);
-  line-height: 1;
-  text-shadow: 0 0 30px rgba(244,211,94,0.4);
-}
-.nl-stat-label {
-  display: block;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-top: 0.35rem;
-}
-.nl-glass-divider {
-  width: 100%;
-  height: 1px;
-  background: rgba(244,211,94,0.12);
-}
-
-@media (max-width: 860px) {
-  .nl-intro-grid { grid-template-columns: 1fr; gap: 3rem; }
-  .nl-glass-panel { max-width: 100%; flex-direction: row; flex-wrap: wrap; justify-content: space-around; }
-  .nl-glass-divider { width: 1px; height: 60px; align-self: center; }
-}
-
-/* ======================================================
-   ░░ NEWSLETTER BENEFITS
-   ====================================================== */
-.nl-benefits {
-  background: var(--bg-deeper);
-  padding: var(--section-pad) 0;
-}
-.nl-benefits-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-.nl-benefit-card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius);
-  padding: 2rem 1.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  transition: transform 0.22s ease, border-color 0.22s ease,
-              box-shadow 0.22s ease;
-}
-.nl-benefit-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(244,211,94,0.3);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
-}
-.nl-benefit-icon {
-  font-size: 2rem;
-  line-height: 1;
-}
-.nl-benefit-title {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  color: var(--accent);
-}
-.nl-benefit-desc {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  line-height: 1.7;
-}
-
-/* ======================================================
-   ░░ NEWSLETTER JOIN (CTA section)
-   ====================================================== */
-.nl-join {
-  position: relative;
-  background: var(--bg-dark);
-  padding: var(--section-pad) 0;
-  overflow: hidden;
-}
-.nl-join-bg {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-.nl-join-glow {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  will-change: transform;
-}
-.nl-join-glow--1 {
-  width: 700px; height: 700px;
-  top: -200px; left: -200px;
-  background: radial-gradient(circle, rgba(61,18,102,0.6) 0%, transparent 70%);
-}
-.nl-join-glow--2 {
-  width: 500px; height: 500px;
-  bottom: -150px; right: -100px;
-  background: radial-gradient(circle, rgba(244,211,94,0.08) 0%, transparent 70%);
-}
-
-.nl-join-inner {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 4rem;
-  align-items: center;
-}
-.nl-join-content .section-heading { color: var(--text-white); }
-.nl-join-title {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  color: var(--text-white);
-  line-height: 1.1;
-  margin-bottom: 1rem;
-}
-.nl-join-cta-wrap { margin-top: 2rem; }
-.nl-join-note {
-  font-size: 0.75rem;
-  color: rgba(255,255,255,0.35);
-  margin-top: 0.85rem;
-  letter-spacing: 0.04em;
-}
-
-/* Email preview card */
-.nl-join-visual { display: flex; align-items: center; justify-content: center; }
-.nl-join-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(244,211,94,0.15);
-  border-radius: 16px;
-  overflow: hidden;
-  width: 100%;
-  max-width: 380px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
-  transition: transform 0.3s ease;
-}
-.nl-join-card:hover { transform: translateY(-4px); }
-
-.nl-join-card-top {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgba(244,211,94,0.1);
-}
-.nl-join-card-logo {
-  height: 28px;
-  width: auto;
-}
-.nl-join-card-badge {
-  font-family: var(--font-stamp);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  background: rgba(244,211,94,0.1);
-  border: 1px solid rgba(244,211,94,0.2);
-  border-radius: 50px;
-  padding: 0.2rem 0.7rem;
-}
-.nl-join-card-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
-.nl-join-card-from {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.04em;
-}
-.nl-join-card-subject {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--text-white);
+  gap: 0.55rem;
+  flex-wrap: wrap;
   line-height: 1.4;
 }
-.nl-join-card-preview {
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.4);
-  line-height: 1.6;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-.nl-join-card-footer {
-  padding: 0.75rem 1.25rem;
-  border-top: 1px solid rgba(244,211,94,0.08);
-}
-.nl-join-card-tag {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--sticker-pink);
-}
-
-@media (max-width: 860px) {
-  .nl-join-inner { grid-template-columns: 1fr; gap: 3rem; }
-  .nl-join-card { max-width: 100%; }
-}
-
-/* ======================================================
-   ░░ COMMUNITY SECTION
-   ====================================================== */
-.nl-community {
-  background: var(--bg-deeper);
-  padding: var(--section-pad) 0;
-}
-.nl-community-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 4rem;
-  align-items: center;
-}
-.nl-community-quote {
-  background: rgba(244,211,94,0.05);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 12px 12px 0;
-  padding: 2.5rem 2rem;
-}
-.nl-community-quote p {
-  font-family: var(--font-display);
-  font-size: clamp(1.15rem, 2.5vw, 1.5rem);
-  color: var(--text-white);
-  line-height: 1.45;
-  font-style: italic;
-  margin-bottom: 1rem;
-}
-.nl-community-quote cite {
-  font-size: 0.8rem;
-  font-style: normal;
-  color: var(--accent);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-.nl-community-pillars {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-.nl-pillar {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius);
-  transition: border-color 0.22s ease, background 0.22s ease;
-}
-.nl-pillar:hover {
-  border-color: rgba(244,211,94,0.25);
-  background: rgba(244,211,94,0.04);
-}
-.nl-pillar-icon {
-  font-size: 1.5rem;
+.announcement-bar-icon {
+  display: inline-flex;
+  font-size: 1rem;
   line-height: 1;
-  flex-shrink: 0;
-  padding-top: 0.1rem;
 }
-.nl-pillar strong {
-  display: block;
-  font-size: 0.92rem;
+.announcement-bar-text {
+  color: var(--bg-deeper);
+}
+.announcement-bar-link {
+  color: var(--bg-deeper);
   font-weight: 900;
-  color: var(--text-white);
-  margin-bottom: 0.2rem;
-}
-.nl-pillar p {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  line-height: 1.55;
-  margin: 0;
-}
-
-@media (max-width: 860px) {
-  .nl-community-grid { grid-template-columns: 1fr; gap: 3rem; }
-}
-
-/* ======================================================
-   ░░ FINAL CTA STRIP
-   ====================================================== */
-.nl-cta-strip {
-  background: linear-gradient(135deg, var(--bg-deeper) 0%, #2a0a44 60%, var(--bg-deeper) 100%);
-  border-top: 1px solid var(--border-gold);
-  border-bottom: 1px solid var(--border-gold);
-  padding: 3.5rem 0;
-}
-.nl-cta-strip-inner {
-  display: flex;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  flex-wrap: wrap;
+  gap: 0.25rem;
+  transition: color var(--transition), gap var(--transition);
+  white-space: nowrap;
 }
-.nl-cta-strip-text {
-  font-family: var(--font-display);
-  font-size: clamp(1.3rem, 3vw, 2rem);
-  color: var(--text-white);
+.announcement-bar-link:hover,
+.announcement-bar-link:focus {
+  color: var(--bg-card);
+  gap: 0.45rem;
+}
+.announcement-bar-link .ab-arrow {
+  display: inline-block;
+  transition: transform var(--transition);
+}
+.announcement-bar-link:hover .ab-arrow,
+.announcement-bar-link:focus .ab-arrow {
+  transform: translateX(3px);
 }
 
 @media (max-width: 600px) {
-  .nl-cta-strip-inner { flex-direction: column; text-align: center; }
-  .nl-hero-title { font-size: clamp(3rem, 18vw, 5rem); }
+  .announcement-bar { font-size: 0.78rem; padding: 0.55rem 0.75rem; }
+  .announcement-bar-inner { gap: 0.35rem; }
+}
+@media (max-width: 380px) {
+  .announcement-bar { font-size: 0.72rem; }
 }
 
 /* ======================================================
-   ░░ FOOTER SUPPORT LINKS — additive only
-   New classes only. Existing footer classes untouched.
+   ░░ COLLECTIVE SPOTLIGHT — Homepage section
+   Sits above footer caution tape. 50/50 desktop, stacked
+   mobile. Gold-glow seal on left, copy + CTA on right.
+   ====================================================== */
+.collective-spotlight-section {
+  background: linear-gradient(135deg, var(--bg-deeper) 0%, var(--bg-dark) 60%, var(--bg-deeper) 100%);
+  padding: var(--section-pad) 0;
+  border-top: 1px solid var(--border-gold);
+  border-bottom: 1px solid var(--border-gold);
+  position: relative;
+  overflow: hidden;
+}
+.collective-spotlight-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(244,211,94,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+.collective-spotlight-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 4rem;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.collective-spotlight-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.collective-spotlight-seal {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 24px rgba(244,211,94,0.28))
+          drop-shadow(0 12px 32px rgba(0,0,0,0.55));
+  animation: logo-glow-pulse 4s ease-in-out infinite;
+}
+.collective-spotlight-text { display: flex; flex-direction: column; gap: 0.5rem; }
+.collective-spotlight-text .section-heading {
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.collective-spotlight-text p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.78;
+  margin-bottom: 1.5rem;
+  max-width: 540px;
+}
+.collective-spotlight-actions {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+@media (max-width: 860px) {
+  .collective-spotlight-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    text-align: center;
+  }
+  .collective-spotlight-visual { order: -1; }
+  .collective-spotlight-text { align-items: center; }
+  .collective-spotlight-text p { margin-left: auto; margin-right: auto; }
+  .collective-spotlight-actions { justify-content: center; }
+  .collective-spotlight-text .divider-accent { margin-left: auto; margin-right: auto; }
+}
+@media (max-width: 480px) {
+  .collective-spotlight-actions { flex-direction: column; align-items: stretch; width: 100%; }
+  .collective-spotlight-actions .btn-primary,
+  .collective-spotlight-actions .btn-outline { justify-content: center; }
+  .collective-spotlight-seal { max-width: 240px; }
+}
+
+/* ======================================================
+   ░░ COLLECTIVE PAGE — Hero, Intro, Show Grid
+   Show cards extend the existing card system (matches
+   archive-panel border / hover language).
+   ====================================================== */
+
+/* Page hero — collective variant uses existing .page-hero */
+.collective-page-h1 {
+  color: var(--accent);
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  margin-top: 0.5rem;
+  line-height: 1.1;
+}
+.collective-page-hero-stickers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 4;
+}
+.collective-hero-sticker {
+  position: absolute;
+}
+.cps-1 { top: 22px; left: 5%; }
+.cps-2 { top: 28px; right: 6%; }
+.cps-3 { bottom: 16px; left: 7%; }
+.cps-4 { bottom: 20px; right: 7%; }
+
+/* Intro section */
+.collective-intro-section {
+  background: var(--bg-dark);
+  padding: 4rem 0 2.5rem;
+}
+.collective-intro-text {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1.02rem;
+  line-height: 1.8;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* Shows section */
+.collective-shows-section {
+  background: var(--bg-dark);
+  padding: 2.5rem 0 var(--section-pad);
+}
+.show-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.75rem;
+  margin-top: 3rem;
+}
+.show-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+.show-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 28px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(244,211,94,0.18);
+  border-color: rgba(244,211,94,0.45);
+  z-index: 2;
+}
+.show-card--flagship {
+  border-color: rgba(244,211,94,0.4);
+  box-shadow: 0 0 28px rgba(244,211,94,0.08), 0 12px 32px rgba(0,0,0,0.4);
+}
+.show-card-flag {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 3;
+  background: var(--accent);
+  color: var(--bg-deeper);
+  font-family: var(--font-stamp);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  padding: 0.28rem 0.75rem;
+  border-radius: 50px;
+  border: 2px solid var(--bg-deeper);
+  transform: rotate(4deg);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+}
+.show-card-image-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(135deg, var(--bg-deeper) 0%, #2a0a44 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-card);
+  overflow: hidden;
+  position: relative;
+}
+.show-card-image-wrap img {
+  max-width: 80%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.5));
+}
+.show-card-image-placeholder {
+  font-family: var(--font-stamp);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  text-align: center;
+  opacity: 0.85;
+  padding: 0 1rem;
+  line-height: 1.2;
+}
+.show-card-body {
+  padding: 1.5rem 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  flex: 1;
+}
+.show-card-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.show-card-eyebrow--flagship { color: var(--accent); }
+.show-card-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--accent);
+  line-height: 1.2;
+}
+.show-card-desc {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.84);
+  line-height: 1.72;
+  flex: 1;
+}
+.show-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.6rem;
+}
+.show-card-actions .btn-primary,
+.show-card-actions .btn-outline,
+.show-card-actions .btn-red {
+  font-size: 0.82rem;
+  padding: 0.55rem 1.1rem;
+}
+
+@media (max-width: 480px) {
+  .show-card-actions { flex-direction: column; align-items: stretch; }
+  .show-card-actions .btn-primary,
+  .show-card-actions .btn-outline,
+  .show-card-actions .btn-red { justify-content: center; }
+  .show-grid { grid-template-columns: 1fr; }
+}
+
+/* ======================================================
+   ░░ COLLECTIVE PLAYLISTS SECTION
+   Spotify + SoundCloud playlist embeds.
+   ====================================================== */
+.collective-playlists-section {
+  background: var(--bg-deeper);
+  padding: var(--section-pad) 0;
+  border-top: 1px solid var(--border-gold);
+}
+.collective-playlists-section .section-heading { color: var(--accent); }
+.collective-playlists-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+.collective-playlist-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.collective-playlist-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+}
+.collective-playlist-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.collective-playlist-card-header svg { flex-shrink: 0; }
+.collective-playlist-card-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--accent);
+  line-height: 1.25;
+}
+.collective-playlist-card-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-top: 0.15rem;
+}
+.collective-playlist-card .spotify-player-wrap {
+  border: 1px solid var(--border-gold);
+  border-radius: 8px;
+}
+.collective-playlist-card .spotify-player-wrap iframe { height: 352px; }
+.collective-playlist-soundcloud-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: auto;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--accent);
+  padding: 0.7rem 1rem;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  background: transparent;
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+  align-self: flex-start;
+}
+.collective-playlist-soundcloud-link:hover {
+  background: var(--accent);
+  color: var(--bg-deeper);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 860px) {
+  .collective-playlists-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+
+/* ============================================================
+   ░░ COLLECTIVE — ADDITIONS v6.3
+   Local Video Player · Unmute Button · Collective Stamp
+   Network Row · Footer Stamp · Live Feed Embeds
+   ============================================================ */
+
+/* ── Override announcement bar to spec gold #D4AF37 ── */
+.announcement-bar {
+  background: #D4AF37;
+}
+
+/* ======================================================
+   ░░ LOCAL VIDEO PLAYER (Homepage Welcome Reel)
+   ====================================================== */
+.local-video-player {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius);
+  display: block;
+  background: #000;
+  object-fit: cover;
+  box-shadow:
+    0 0 40px rgba(244,211,94,0.08),
+    0 24px 64px rgba(0,0,0,0.6);
+}
+
+.video-unmute-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.45rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 10;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  backdrop-filter: blur(4px);
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.video-unmute-btn:hover,
+.video-unmute-btn:focus {
+  background: rgba(212, 175, 55, 0.95);
+  color: #1a0033;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+  .video-unmute-btn { font-size: 0.7rem; padding: 0.35rem 0.7rem; bottom: 8px; right: 8px; }
+}
+
+/* ======================================================
+   ░░ COLLECTIVE STAMP
+   Used on collective.html hero AND homepage spotlight.
+   ====================================================== */
+.collective-stamp-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.75rem;
+}
+
+.collective-stamp-wrap img {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  display: block;
+  filter:
+    drop-shadow(0 0 14px rgba(212,175,55,0.45))
+    drop-shadow(0 0 32px rgba(212,175,55,0.18));
+  animation: collective-stamp-pulse 4s ease-in-out infinite;
+}
+
+@keyframes collective-stamp-pulse {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 14px rgba(212,175,55,0.45))
+      drop-shadow(0 0 32px rgba(212,175,55,0.18));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 22px rgba(212,175,55,0.65))
+      drop-shadow(0 0 48px rgba(212,175,55,0.28));
+  }
+}
+
+/* Variant for the homepage spotlight section — larger */
+.collective-spotlight-stamp {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  display: block;
+  filter:
+    drop-shadow(0 0 18px rgba(212,175,55,0.5))
+    drop-shadow(0 0 40px rgba(212,175,55,0.2))
+    drop-shadow(0 12px 32px rgba(0,0,0,0.55));
+  animation: collective-stamp-pulse 4s ease-in-out infinite;
+}
+
+@media (max-width: 480px) {
+  .collective-spotlight-stamp { max-width: 220px; }
+  .collective-stamp-wrap img  { max-width: 170px; }
+}
+
+/* ======================================================
+   ░░ NETWORK ROW — homepage strip above footer
+   Minimal horizontal row of show names.
+   ====================================================== */
+.network-row-section {
+  background: var(--bg-deeper);
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--border-gold);
+}
+.network-row-label {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+}
+.network-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem 2.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+}
+.network-row a {
+  color: var(--text-white);
+  position: relative;
+  transition: color var(--transition);
+  padding: 0.25rem 0;
+}
+.network-row a:hover,
+.network-row a:focus {
+  color: var(--accent);
+}
+.network-row a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+.network-row a:hover::after,
+.network-row a:focus::after { width: 100%; }
+.network-row .network-row-divider {
+  color: var(--accent);
+  opacity: 0.5;
+  user-select: none;
+  font-size: 0.9em;
+}
+@media (max-width: 600px) {
+  .network-row { gap: 0.65rem 1.25rem; }
+  .network-row .network-row-divider { display: none; }
+}
+
+/* ======================================================
+   ░░ FOOTER COLLECTIVE BLOCK
+   New row inside footer for collective stamp + link.
+   ====================================================== */
+.footer-collective {
+  width: 100%;
+  border-top: 1px solid rgba(244,211,94,0.12);
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.footer-collective-stamp {
+  height: 56px;
+  width: auto;
+  display: block;
+  filter:
+    drop-shadow(0 0 10px rgba(212,175,55,0.4))
+    drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  transition: transform var(--transition);
+}
+.footer-collective-stamp:hover { transform: scale(1.05); }
+.footer-collective-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.3;
+}
+.footer-collective-eyebrow {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.footer-collective-link {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.footer-collective-link .fc-arrow {
+  display: inline-block;
+  transition: transform var(--transition);
+}
+.footer-collective-link:hover { opacity: 0.85; }
+.footer-collective-link:hover .fc-arrow { transform: translateX(3px); }
+
+@media (max-width: 480px) {
+  .footer-collective { flex-direction: column; text-align: center; gap: 0.65rem; }
+  .footer-collective-text { align-items: center; }
+}
+
+/* ======================================================
+   ░░ COLLECTIVE LIVE FEED — SoundCloud + Spotify embeds
+   ====================================================== */
+.collective-livefeed-section {
+  background: var(--bg-deeper);
+  padding: var(--section-pad) 0;
+  border-top: 1px solid var(--border-gold);
+  border-bottom: 1px solid var(--border-gold);
+}
+.collective-livefeed-section .section-heading { color: var(--accent); }
+.collective-livefeed-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2.75rem;
+}
+.collective-livefeed-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+.collective-livefeed-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+  border-color: rgba(244,211,94,0.32);
+}
+.collective-livefeed-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+.collective-livefeed-header svg { flex-shrink: 0; }
+.collective-livefeed-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--accent);
+  line-height: 1.25;
+  margin: 0;
+}
+.collective-livefeed-sub {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-top: 0.2rem;
+}
+.collective-livefeed-embed {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-gold);
+  background: #000;
+}
+.collective-livefeed-embed iframe {
+  width: 100%;
+  display: block;
+  border: 0;
+}
+.collective-livefeed-embed--spotify iframe { height: 352px; }
+.collective-livefeed-embed--soundcloud iframe { height: 166px; }
+.collective-livefeed-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+.collective-livefeed-cta-row .btn-outline,
+.collective-livefeed-cta-row .btn-primary {
+  font-size: 0.82rem;
+  padding: 0.55rem 1.1rem;
+}
+
+@media (max-width: 860px) {
+  .collective-livefeed-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+@media (max-width: 480px) {
+  .collective-livefeed-card { padding: 1.25rem; }
+  .collective-livefeed-cta-row { flex-direction: column; align-items: stretch; }
+  .collective-livefeed-cta-row .btn-outline,
+  .collective-livefeed-cta-row .btn-primary { justify-content: center; }
+}
+
+/* ============================================================
+   ░░ MOBILE NAV BUG FIX v6.4
+   When mobile menu is open, lift the hamburger button above
+   the fullscreen menu overlay so it remains tappable to toggle
+   the menu closed. Without this, the .mobile-menu (z-index:1200)
+   intercepts pointer events on the hamburger underneath it.
+   ============================================================ */
+.hamburger[aria-expanded="true"] {
+  position: relative;
+  z-index: 1400;
+}
+
+/* ============================================================
+   ░░ COLLECTIVE — ADDITIONS v6.5
+   Mini media-network show grid hover · single-card playlist layout
+   ============================================================ */
+
+/* Enhanced hover for show cards — mini media network feel */
+.show-card {
+  /* keeps existing transition; adds scale alongside translateY */
+  will-change: transform;
+}
+.show-card:hover,
+.show-card:focus-within {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow:
+    0 28px 56px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(244,211,94,0.18),
+    0 0 32px rgba(244,211,94,0.08);
+  border-color: rgba(244,211,94,0.42);
+}
+.show-card--flagship:hover,
+.show-card--flagship:focus-within {
+  box-shadow:
+    0 28px 56px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(244,211,94,0.32),
+    0 0 40px rgba(244,211,94,0.18);
+}
+@media (prefers-reduced-motion: reduce) {
+  .show-card,
+  .show-card:hover,
+  .show-card:focus-within { transform: none !important; }
+}
+@media (max-width: 480px) {
+  /* Disable scale on small touch screens — reads as wobble, not polish */
+  .show-card:hover,
+  .show-card:focus-within { transform: translateY(-4px); }
+}
+
+/* Single-card centered layout for the main media (Spotify) section */
+.collective-livefeed-single {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.75rem;
+}
+.collective-livefeed-single .collective-livefeed-card {
+  width: 100%;
+  max-width: 760px;
+}
+.collective-livefeed-card--featured {
+  border-color: rgba(244,211,94,0.32);
+  box-shadow:
+    0 0 32px rgba(244,211,94,0.08),
+    0 16px 40px rgba(0,0,0,0.45);
+}
+.collective-livefeed-intro {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.75;
+  max-width: 580px;
+  margin: 1rem auto 0;
+}
+
+
+/* ============================================================
+   ░░ CONTACT PAGE — extracted from inline <style> v6.5
+   ============================================================ */
+/* ── Contact page specific ── */
+    .contact-hero-section {
+      background: radial-gradient(ellipse at 50% 60%, #3d1266 0%, var(--bg-dark) 70%);
+      padding: 6rem 1.5rem 5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border-gold);
+    }
+    .contact-hero-section h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .contact-hero-section p {
+      color: var(--text-muted);
+      max-width: 540px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    /* Full contact section */
+    .contact-full-section {
+      background: var(--bg-dark);
+      padding: var(--section-pad) 0;
+    }
+
+    .contact-full-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .contact-full-grid { grid-template-columns: 1fr; gap: 3rem; }
+    }
+
+    /* Info column */
+    .contact-info-col h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .contact-info-col > p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.78;
+      margin-bottom: 2.25rem;
+    }
+
+    /* Contact method list */
+    .contact-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-method {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.1rem 1.25rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+    }
+    .contact-method:hover {
+      background: rgba(244,211,94,0.06);
+      border-color: rgba(244,211,94,0.22);
+      transform: translateX(4px);
+    }
+
+    .contact-method-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(244,211,94,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+    }
+    .contact-method-icon svg { width: 20px; height: 20px; }
+
+    .contact-method-text { }
+    .contact-method-label {
+      display: block;
+      font-weight: 700;
+      color: var(--text-white);
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+    .contact-method-value {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* FAQ block */
+    .faq-block {
+      margin-top: 2.5rem;
+    }
+    .faq-block h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--text-white);
+      margin-bottom: 1rem;
+    }
+    .faq-item {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+    .faq-a {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* Form column */
+    .contact-form-col { }
+
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      padding: 2.25rem 2rem;
+    }
+
+    .form-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-card > p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-bottom: 1.75rem;
+      line-height: 1.65;
+    }
+
+    /* Thank-you section */
+    .thanks-section {
+      background: var(--bg-deeper);
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+    .thanks-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .thanks-section p {
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 1.75rem;
+      font-size: 0.93rem;
+      line-height: 1.7;
+    }
+
+/* ============================================================
+   ░░ MOBILE MENU — NAVBAR OVERLAP FIX (v6.7 + v6.9 + v7.0)
+   When the mobile menu is open, the sticky navbar sits at
+   z-index 1300 (bumped by the menu IIFE so the hamburger
+   stays tappable). That worked, but its opaque background
+   covered the first menu item ("Episodes"). When the menu
+   is open we make the navbar background + border transparent
+   so the menu's solid background shows through everywhere.
+
+   v6.9 follow-ups:
+   1. Hide ALL nav-right children (btn-primary, btn-red, btn-outline,
+      nav-icons) when menu is open — not just btn-primary.
+   2. Hide the X close button. Hamburger toggle does the same job.
+
+   v7.0 follow-ups (the "Episodes link doesn't work at top of page"
+   fix). Reproduction: at scrollY=0 the announcement bar (~99px)
+   sits in the document flow and the navbar sticks below it. Even
+   though the menu is at z-index 1200 and elementFromPoint reports
+   the menu link as topmost, real iOS Safari taps were getting
+   swallowed by the still-laid-out (just visibility:hidden) header
+   children — the sticky navbar's transparent strip + the absolutely
+   positioned X close button + the desktop CTA buttons. Three fixes:
+
+   1. Selectors now use `body.menu-open ...` (toggled in JS) as the
+      primary mechanism. `:has(#mobileMenu.open)` kept as a defensive
+      fallback for any browser where the body-class toggle hasn't run.
+   2. `display: none` replaces `visibility: hidden`. Hidden but
+      laid-out elements can still intercept touches in some Safari
+      builds. display:none removes them from layout entirely.
+   3. The announcement bar is also hidden while the menu is open.
+
+   v7.0.1 fix: keep .nav-right visible (so the hamburger stays
+   anchored top-right via flex layout) but hide its non-hamburger
+   children. If we display:none the whole nav-right or its CTA
+   children directly, the hamburger reflows from its right-edge
+   position to the left edge of the navbar, which moves it out
+   from under the user's thumb after they've already opened the
+   menu, making the close-toggle hard to find. Hiding only the
+   specific children (logo, nav, CTAs, social icons) preserves
+   the layout while emptying the visual space.
+   ============================================================ */
+/* ============================================================
+   ░░ MOBILE MENU — TOUCH FIX (v7.1, per spec)
+   Per spec: "Mobile navigation bug is caused by elements using
+   visibility: hidden, which still intercept touch events on iOS
+   Safari. Replace ALL instances of visibility: hidden in the
+   mobile menu state with display: none so those elements are
+   removed from layout and cannot block taps."
+
+   All previously-`visibility: hidden` rules now use `display: none`.
+   `pointer-events: none` added as a defensive second layer in case
+   any browser's CSS engine evaluates display rules late.
+
+   Also adds .menu-open scroll-lock class on body — replaces the
+   inline `body.style.overflow = 'hidden'` that was set in JS.
+   ============================================================ */
+body.menu-open #navbar,
+body:has(#mobileMenu.open) #navbar {
+  background: transparent;
+  border-bottom-color: transparent;
+}
+
+body.menu-open .announcement-bar,
+body:has(#mobileMenu.open) .announcement-bar,
+body.menu-open #navbar .nav-logo,
+body:has(#mobileMenu.open) #navbar .nav-logo,
+body.menu-open #navbar > .container > nav,
+body:has(#mobileMenu.open) #navbar > .container > nav,
+body.menu-open #navbar .nav-right > a,
+body.menu-open #navbar .nav-right .btn-primary,
+body.menu-open #navbar .nav-right .btn-red,
+body.menu-open #navbar .nav-right .btn-outline,
+body.menu-open #navbar .nav-right .nav-icons,
+body:has(#mobileMenu.open) #navbar .nav-right > a,
+body:has(#mobileMenu.open) #navbar .nav-right .btn-primary,
+body:has(#mobileMenu.open) #navbar .nav-right .btn-red,
+body:has(#mobileMenu.open) #navbar .nav-right .btn-outline,
+body:has(#mobileMenu.open) #navbar .nav-right .nav-icons {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* Body scroll-lock when mobile menu is open. Replaces the
+   previously-inlined `document.body.style.overflow = 'hidden'`. */
+body.menu-open {
+  overflow: hidden;
+}
+
+/* X close button — redundant with hamburger toggle, so hide it.
+   Kept in DOM for screen readers and as a JS fallback. */
+.mobile-close {
+  display: none;
+  pointer-events: none;
+}
+
+/* Closed mobile menu must not intercept touches. The base
+   .mobile-menu rule uses `display: none` already; this adds
+   pointer-events:none as a belt-and-braces guarantee on browsers
+   where display:none might be transitioning. The .open class then
+   restores pointer-events:auto. */
+.mobile-menu:not(.open) {
+  pointer-events: none;
+}
+.mobile-menu.open {
+  pointer-events: auto;
+}
+
+/* ============================================================
+   ░░ INLINE-STYLE MIGRATION (v6.8)
+   These rules replace inline style="..." attributes that were
+   carried over from the original templates on episodes.html
+   and watch.html. Visual output is unchanged; the markup is
+   simply cleaner and now respects the no-inline-CSS rule.
+   ============================================================ */
+
+/* Page hero overflow + sticker overlay positioning helpers
+   (parallels the existing collective-page-hero-stickers pattern) */
+.page-hero--overflow-visible { overflow: visible; }
+
+.page-hero-stickers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 4;
+}
+
+.page-hero-container--layered {
+  position: relative;
+  z-index: 5;
+}
+
+.page-hero-h1--gold {
+  color: var(--accent);
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-top: 0.5rem;
+}
+
+/* Hero sticker placements (replace inline top/right/bottom/left/size) */
+.hero-sticker--mic {
+  width: 60px;
+  height: 60px;
+  font-size: 0.54rem;
+  top: 22px;
+  left: 5%;
+  animation: sticker-float-a 3.8s ease-in-out infinite;
+  position: absolute;
+}
+.hero-sticker--mic-lg {
+  width: 62px;
+  height: 62px;
+  font-size: 0.54rem;
+  top: 22px;
+  left: 5%;
+  animation: sticker-float-a 3.8s ease-in-out infinite;
+  position: absolute;
+}
+.hero-sticker--green {
+  width: 58px;
+  height: 58px;
+  font-size: 0.52rem;
+  bottom: 14px;
+  left: 8%;
+  animation: sticker-float-b 4.1s ease-in-out infinite 0.5s;
+  position: absolute;
+}
+.hero-sticker-icon-md { font-size: 0.85rem; }
+.hero-sticker-icon-lg { font-size: 0.88rem; }
+.hero-sticker--badge-tr {
+  top: 28px;
+  right: 6%;
+  transform: rotate(5deg);
+  position: absolute;
+}
+.hero-sticker--badge-br {
+  bottom: 20px;
+  right: 7%;
+  transform: rotate(-6deg);
+  position: absolute;
+}
+
+/* Hero CTA cluster (centered button row beneath H1) */
+.hero-cta-cluster {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.75rem;
+}
+.btn-primary--sm,
+.btn-outline--sm,
+.btn-red--sm {
+  font-size: 0.85rem;
+  padding: 0.55rem 1.3rem;
+}
+
+/* Section background utilities (used by #latest-drop, #archive-grid,
+   #youtube-player, #tiktok-feed) */
+.section--dark    { background: var(--bg-dark);    padding: var(--section-pad) 0; }
+.section--deeper  { background: var(--bg-deeper);  padding: var(--section-pad) 0; }
+
+/* "NOW PLAYING" pulse pill that lives above latest-drop heading */
+.now-playing-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--sticker-pink);
+  color: #fff;
+  font-family: var(--font-stamp);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 50px;
+  border: 2px solid var(--bg-deeper);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.now-playing-pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  display: inline-block;
+  animation: blink-dot 1.2s ease-in-out infinite;
+}
+
+/* Section heading colour modifiers */
+.section-heading--gold  { color: var(--accent); }
+.section-heading--white { color: var(--text-white); }
+
+/* Inline icon adjacent to text in headings */
+.heading-icon-inline {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.4rem;
+}
+
+/* Section subhead */
+.section-subhead-muted {
+  color: var(--text-muted);
+  font-size: 0.93rem;
+}
+.section-subhead-muted--top { margin-top: 0.75rem; }
+.section-subhead-muted--bottom-zero { margin-bottom: 0; }
+.section-subhead-muted--small {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+}
+
+/* Center-aligned section labels and headings (page-hero variants) */
+.section-label--center-block { text-align: center; display: block; }
+.section-heading--center-gold  { text-align: center; color: var(--accent); }
+.section-heading--center-white { text-align: center; color: var(--text-white); }
+
+/* Spacing utility wrappers for reused layout patterns */
+.text-center--mb-1   { text-align: center; margin-bottom: 1rem; }
+.text-center--mb-2   { text-align: center; margin-bottom: 2rem; }
+.center-row {
+  text-align: center;
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.center-row--mt-3 { margin-top: 3rem; }
+.center-row--mt-2 { margin-top: 2rem; }
+
+.divider-accent--center { margin: 0 auto; }
+.divider-accent--center-mb { margin: 0 auto 1rem; }
+
+.text-center-muted-top {
+  text-align: center;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  font-size: 0.93rem;
+}
+.text-center-muted-thin {
+  text-align: center;
+  color: var(--text-muted);
+  margin-top: 1rem;
+  font-size: 0.93rem;
+  margin-bottom: 0;
+}
+
+/* Small bottom block of an archive section */
+.archive-footer-note {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* Watch page: media-section-label spacing variant */
+.media-section-label--mt { margin-top: 1.25rem; }
+
+/* Watch page: TikTok embed sizing */
+.tiktok-embed--responsive {
+  max-width: 780px;
+  min-width: 288px;
+  width: 100%;
+}
+
+/* Contact page tiny utilities */
+.text-accent { color: var(--accent); }
+.row-center-wrap {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Archive footer CTA wrapper (text-align:center;margin-top:3rem;) */
+.archive-footer-cta { text-align: center; margin-top: 3rem; }
+
+/* TikTok footer CTA wrapper (text-align:center;margin-top:2rem;) */
+.text-center-row-mt-2 { text-align: center; margin-top: 2rem; }
+
+/* ============================================================
+   ░░ SHOW CARD — SPOTIFY EMBED + LISTEN BUTTON (v7.2)
+   In-card Spotify show embed and prominent Spotify-branded
+   "Listen on Spotify" CTA. Designed to scale cleanly: cards
+   keep their existing structure, the embed slots between
+   description and action row, and the new Spotify button
+   sits below the action row as a primary-emphasis CTA.
+   ============================================================ */
+
+/* Spotify embed wrapper — matches the existing .collective-livefeed-embed
+   visual treatment (gold border, radius, dark background). */
+.show-card-spotify-embed {
+  width: 100%;
+  margin: 0.5rem 0 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-gold);
+  background: #000;
+  line-height: 0;
+}
+.show-card-spotify-embed iframe {
+  width: 100%;
+  display: block;
+  border: 0;
+  height: 232px;
+}
+
+/* Prominent "Listen on Spotify" button — Spotify brand green,
+   slightly stronger visual weight than the existing red/gold/outline
+   action buttons so it reads as the primary "go to Spotify" CTA. */
+.btn-spotify {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 0.85rem;
+  padding: 0.8rem 1.25rem;
+  background: #1DB954;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 2px solid #1DB954;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 14px rgba(29, 185, 84, 0.18);
+}
+.btn-spotify:hover,
+.btn-spotify:focus {
+  background: #1ED760;
+  border-color: #1ED760;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(29, 185, 84, 0.32);
+  color: #fff;
+}
+.btn-spotify-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .btn-spotify { font-size: 0.85rem; padding: 0.7rem 1rem; }
+  .show-card-spotify-embed iframe { height: 232px; }
+}
+
+/* ============================================================
+   ░░ SHOW CARD — SECONDARY LINKS + CROSS-PROMO (v7.3)
+   Per spec: "high-conversion listening funnel — preview content
+   via embeds, immediately continue listening on Spotify, are
+   guided to explore additional podcasts on the same page."
+
+   The existing .btn-spotify keeps its primary emphasis (green
+   Spotify-brand button). These new rules style the secondary
+   tier (website/YouTube links) and the cross-promotion line
+   beneath each card so they read as supporting content, not
+   competition for the primary CTA.
+   ============================================================ */
+
+/* Secondary links row — text-style with arrows, lower visual weight */
+.show-card-secondary-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(244, 211, 94, 0.10);
+}
+.show-card-secondary-link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: color var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.show-card-secondary-link:hover,
+.show-card-secondary-link:focus {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Cross-promotion line — soft gold callout that points to another
+   show on the same page. Anchor-link target uses scroll-margin so
+   the destination show isn't hidden behind the sticky navbar.
+
+   v7.4 update: cross-promo is now a single pill-style anchor element
+   ("Keep listening: <show name>"). Subtle low-opacity bg, thin border,
+   CSS-generated arrow with rightward motion on hover, and a slight
+   press scale-down for mobile tap feedback. Designed to read as a
+   subtle "next step" cue, not a heavy CTA. */
+.show-card-crosspromo {
+  /* Spec: inline-block, slight padding (6-12px), fully rounded, very
+     light bg, thin low-opacity border, small top margin to separate
+     cleanly from the content above. */
+  display: inline-flex;
+  align-items: center;
+  margin-top: 1.1rem;
+  padding: 0.45rem 0.95rem 0.45rem 0.95rem;
+  border-radius: 999px;
+  background: rgba(244, 211, 94, 0.06);
+  border: 1px solid rgba(244, 211, 94, 0.18);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  line-height: 1;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    transform var(--transition);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* CSS-generated arrow (per spec: not hardcoded text). Pseudo-element
+   keeps the markup clean and gives us full control over the hover
+   motion. */
+.show-card-crosspromo::after {
+  content: "→";
+  display: inline-block;
+  margin-left: 0.5rem;
+  font-size: 0.95em;
+  color: var(--accent);
+  transition: transform var(--transition), color var(--transition);
+  will-change: transform;
+}
+
+.show-card-crosspromo:hover,
+.show-card-crosspromo:focus-visible {
+  background: rgba(244, 211, 94, 0.12);
+  border-color: rgba(244, 211, 94, 0.35);
+  color: var(--text-white);
+  transform: translateY(-1px);
+  outline: none;
+}
+.show-card-crosspromo:hover::after,
+.show-card-crosspromo:focus-visible::after {
+  transform: translateX(3px);
+  color: var(--accent);
+}
+
+/* Mobile press feedback — subtle scale down on active state */
+.show-card-crosspromo:active {
+  transform: scale(0.98);
+  background: rgba(244, 211, 94, 0.16);
+}
+
+/* Small phone — tighten padding slightly so the pill stays compact
+   when the show name pushes width close to the column edge. */
+@media (max-width: 480px) {
+  .show-card-crosspromo {
+    font-size: 0.74rem;
+    padding: 0.4rem 0.85rem;
+  }
+}
+
+/* Anchor scroll offset so cross-promo links don't drop the target
+   show behind the sticky navbar (~99px tall when announcement bar
+   is showing; safe value covers it). */
+.show-card[id] {
+  scroll-margin-top: 110px;
+}
+
+/* ============================================================
+   ░░ CROSS-PROMO WRAPPER + SCROLL UX (v7.5)
+   Per spec: separate the "Keep listening:" label from the show
+   name link so the show name pill can wrap as a single unit on
+   mobile instead of breaking awkwardly mid-phrase.
+
+   The existing .show-card-crosspromo styles (pill background,
+   border, hover lift, ::after arrow) remain in effect on the
+   anchor — we just add the wrapper + label rules and a
+   white-space:nowrap belt-and-braces guard on .cross-promo.
+
+   Also adds:
+   - html { scroll-behavior: smooth } for animated anchor jumps
+   - .podcast-section { scroll-margin-top: 100px } so each show
+     lands cleanly below the sticky navbar after a cross-promo tap
+   ============================================================ */
+
+/* Smooth in-page anchor scrolling — applies globally per spec.
+   Affects every anchor jump on every page (announcement bar
+   "Explore the Network →", cross-promo links, etc.). */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Respect users who have requested reduced motion in their OS. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Cross-promo wrapper: keeps "Keep listening:" label and the
+   show-name pill on the same line when there's room, wraps to
+   two lines cleanly on narrow screens with the pill staying
+   intact (white-space:nowrap on the pill prevents mid-name
+   line breaks). */
+.cross-promo-wrap {
+  margin-top: 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cross-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  opacity: 0.85;
+  line-height: 1;
+}
+
+/* Spec guard — keep the show-name link from wrapping mid-name.
+   The .show-card-crosspromo rule already handles the pill style. */
+.cross-promo {
+  white-space: nowrap;
+}
+
+/* When inside the new wrapper, neutralize the old top margin from
+   .show-card-crosspromo (the wrapper now owns the spacing). */
+.cross-promo-wrap .show-card-crosspromo {
+  margin-top: 0;
+}
+
+/* Spec: scroll offset so cross-promo anchor jumps land cleanly
+   under the sticky navbar instead of getting hidden behind it. */
+.podcast-section {
+  scroll-margin-top: 100px;
+}
+
+@media (max-width: 480px) {
+  .cross-label { font-size: 0.74rem; }
+}
+
+/* ======================================================
+   ░░ NEWSLETTER NAV — gap reduction at small desktop
+   Prevents 6-item nav from crowding between 768–900px.
+   No existing classes changed — additive @media only.
+   ====================================================== */
+@media (max-width: 900px) and (min-width: 768px) {
+  .nav-links { gap: 1.25rem; }
+  .nav-links a { font-size: 0.85rem; }
+}
+
+/* ======================================================
+   ░░ FOOTER SUPPORT LINKS
+   New classes only — footer-inner, footer-center, footer-credit
+   and all existing footer classes are untouched above.
    ====================================================== */
 .footer-support-links {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(244,211,94,0.08);
+  gap: 0.35rem 1.25rem;
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(244, 211, 94, 0.08);
 }
+
 .footer-support-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-muted);
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
   text-decoration: none;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   transition: color 0.22s ease, text-shadow 0.22s ease;
+  white-space: nowrap;
 }
-.footer-support-link svg { flex-shrink: 0; opacity: 0.7; }
+
+.footer-support-link svg {
+  flex-shrink: 0;
+  opacity: 0.5;
+  transition: opacity 0.22s ease;
+}
+
 .footer-support-link:hover {
   color: var(--accent);
-  text-shadow: 0 0 12px rgba(244,211,94,0.4);
+  text-shadow: 0 0 10px rgba(244, 211, 94, 0.35);
 }
-.footer-support-link:hover svg { opacity: 1; }
 
-/* Stack support links on mobile */
+.footer-support-link:hover svg {
+  opacity: 1;
+}
+
+/* Stack on mobile — consistent with existing footer-inner column layout */
 @media (max-width: 600px) {
   .footer-support-links {
     flex-direction: column;
-    gap: 0.6rem;
-  }
-}
-
-/* ======================================================
-   ░░ REDUCED MOTION
-   All animations respect user preference.
-   ====================================================== */
-@media (prefers-reduced-motion: reduce) {
-  .nl-reveal,
-  .nl-reveal--delay-1,
-  .nl-reveal--delay-2,
-  .nl-reveal--delay-3 {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-  .nl-hero-glow,
-  .nl-scroll-line,
-  .nl-hero-img {
-    animation: none;
-    will-change: auto;
+    align-items: center;
+    gap: 0.55rem;
   }
 }
