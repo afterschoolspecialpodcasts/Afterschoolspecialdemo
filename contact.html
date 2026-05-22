@@ -268,6 +268,70 @@
     </div>
   </section>
 
+  <!-- ══ VOICE MESSAGE SECTION ══ -->
+  <section class="sp-section" id="voice-message" aria-labelledby="sp-heading">
+    <div class="container">
+
+      <!-- Intro block -->
+      <div class="sp-intro sp-reveal">
+        <span class="section-label">Leave a Voice Message</span>
+        <h2 class="sp-heading" id="sp-heading">Your voice belongs on the show.</h2>
+        <p class="sp-subtext">
+          Got a reaction to an episode? A memory you want to share? A topic you've been waiting years for someone to talk about? Hit the button below and talk to the crew directly. Some submissions get played on air.
+        </p>
+        <ul class="sp-reasons" aria-label="Reasons to leave a voice message">
+          <li>
+            <span class="sp-reason-icon" aria-hidden="true">🎙️</span>
+            <span>Episode reactions &amp; hot takes</span>
+          </li>
+          <li>
+            <span class="sp-reason-icon" aria-hidden="true">📼</span>
+            <span>Throwback memories &amp; personal stories</span>
+          </li>
+          <li>
+            <span class="sp-reason-icon" aria-hidden="true">🔥</span>
+            <span>Topic pitches &amp; debate starters</span>
+          </li>
+          <li>
+            <span class="sp-reason-icon" aria-hidden="true">🎉</span>
+            <span>Shoutouts to the crew</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- SpeakPipe widget card -->
+      <div class="sp-widget-card sp-reveal sp-reveal--delay">
+
+        <div class="sp-widget-header" aria-hidden="true">
+          <span class="sp-widget-dot"></span>
+          <span class="sp-widget-dot"></span>
+          <span class="sp-widget-dot"></span>
+          <span class="sp-widget-label">Voice Message Studio</span>
+        </div>
+
+        <!-- SpeakPipe inline widget — exact embed code as specified -->
+        <div class="sp-iframe-wrap">
+          <iframe
+            src="https://www.speakpipe.com/widget/inline/ugvk15p855v2s21pnfz6n86550sjj1g5"
+            allow="microphone"
+            width="100%"
+            height="200"
+            frameborder="0"
+            title="Leave a voice message for After School Special Podcast"
+            loading="lazy"
+          ></iframe>
+        </div>
+        <script async src="https://www.speakpipe.com/widget/loader.js" charset="utf-8"></script>
+
+        <p class="sp-widget-note">
+          Up to 90 seconds. No account needed. Messages go straight to the crew.
+        </p>
+
+      </div>
+
+    </div>
+  </section>
+
   <!-- ══ FOOTER ══ -->
   <footer role="contentinfo">
     <div class="container footer-inner">
@@ -433,7 +497,61 @@
         submitBtn.disabled = false;
       }
     });
+
+    // ── SpeakPipe scroll reveal ──
+    (function () {
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var revealEls = document.querySelectorAll('.sp-reveal');
+
+      if (revealEls.length) {
+        if (prefersReduced) {
+          revealEls.forEach(function (el) { el.classList.add('sp-revealed'); });
+        } else {
+          var obs = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('sp-revealed');
+                obs.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+          revealEls.forEach(function (el) { obs.observe(el); });
+        }
+      }
+
+      // ── Floating mic button show/hide on scroll ──
+      var floatBtn = document.getElementById('spFloatBtn');
+      if (floatBtn && !prefersReduced) {
+        var ticking = false;
+        window.addEventListener('scroll', function () {
+          if (!ticking) {
+            window.requestAnimationFrame(function () {
+              var scrolled = window.pageYOffset > 320;
+              floatBtn.classList.toggle('sp-float-visible', scrolled);
+              ticking = false;
+            });
+            ticking = true;
+          }
+        }, { passive: true });
+      } else if (floatBtn && prefersReduced) {
+        // Show immediately under reduced motion
+        floatBtn.classList.add('sp-float-visible');
+      }
+    })();
   </script>
+  <!-- ══ FLOATING MIC CTA ══ -->
+  <a href="#voice-message"
+     id="spFloatBtn"
+     class="sp-float-btn"
+     aria-label="Leave a voice message for After School Special Podcast">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+      <line x1="12" y1="19" x2="12" y2="23"/>
+      <line x1="8" y1="23" x2="16" y2="23"/>
+    </svg>
+    <span>Leave a Voice Message</span>
+  </a>
 
 </body>
 </html>
