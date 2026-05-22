@@ -141,10 +141,10 @@
        Full-viewport. Background image with parallax.
        Layered: image → dark overlay → gradient → glows → content.
   ════════════════════════════════════════════════════════ -->
-  <section class="nl-hero" aria-label="newsletterbackground.png">
+  <section class="nl-hero" aria-label="Newsletter hero">
 
     <!-- Background image — lazy-loaded, GPU parallax via JS -->
-    <div class="nl-hero-img" id="nlHeroBg" role="img" aria-label="newsletterbackground.png"></div>
+    <div class="nl-hero-img" id="nlHeroBg" role="img" aria-label="Newsletter background"></div>
 
     <!-- Layer 1: dark overlay -->
     <div class="nl-hero-overlay" aria-hidden="true"></div>
@@ -440,45 +440,31 @@
         </div>
 
         <!-- Second email preview — a different angle -->
-        <div class="nl-email-preview nl-reveal nl-reveal--d2" aria-label="Example newsletter email">
-          <div class="nl-email-chrome" aria-hidden="true">
-            <div class="nl-email-dot"></div>
-            <div class="nl-email-dot"></div>
-            <div class="nl-email-dot"></div>
-          </div>
-          <div class="nl-email-header">
+        <!-- CTA panel — no fabricated content, links to the real published post -->
+        <div class="nl-join-cta-panel nl-reveal nl-reveal--d2">
+          <div class="nl-join-cta-panel-top">
             <img src="images/afterschoolspecialpodcastlogo.png"
-                 alt=""
+                 alt="After School Special Podcast"
                  class="nl-email-logo"
-                 loading="lazy"
-                 aria-hidden="true">
-            <div class="nl-email-meta">
-              <p class="nl-email-from">Aaron, Double D &amp; Staffman</p>
-              <p class="nl-email-subject">You're early. And that matters. 📬</p>
-            </div>
-            <span class="nl-email-badge">Subscriber only</span>
+                 loading="lazy">
+            <span class="nl-email-badge">Issue #1 — Live Now</span>
           </div>
-          <div class="nl-email-body">
-            <p class="nl-email-body-lead">
-              There's a version of this that becomes another podcast newsletter that just recaps episodes. This isn't that. We're not here to tell you what you already heard. We're here for the stuff in between.
-            </p>
-            <p class="nl-email-body-fade">
-              This week: the Jordan conversation we never finished on air, a Detroit record store that barely anyone knows about, and Double D's actual ranked list of the best Saturday morning cartoons of all time...
-            </p>
-          </div>
-          <div class="nl-email-footer">
-            <a href="https://afterschoolcollective.beehiiv.com/p/the-collective-is-here-here-s-what-you-need-to-know"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="nl-email-cta-link">
-              Read on Beehiiv
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"/>
-                <polyline points="12 5 19 12 12 19"/>
-              </svg>
-            </a>
-            <span class="nl-email-tag">Free on Beehiiv</span>
-          </div>
+          <p class="nl-join-cta-panel-heading">
+            The Collective Is Here.<br>Read the first issue.
+          </p>
+          <p class="nl-join-cta-panel-sub">
+            The first issue of the newsletter is live on Beehiiv — free to read, no sign-in required. Start there. Then subscribe so you don't miss the next one.
+          </p>
+          <a href="https://afterschoolcollective.beehiiv.com/p/the-collective-is-here-here-s-what-you-need-to-know"
+             target="_blank"
+             rel="noopener noreferrer"
+             class="nl-btn-cta">
+            Read Issue #1
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
         </div>
 
       </div>
@@ -757,7 +743,7 @@
           parallaxEl.classList.add('nl-img-loaded');
         };
         /* Start loading — lazy but not blocking */
-        bgImg.src = 'images/newsletterbackground.jpg';
+        bgImg.src = 'images/newsletterbackground.png';
       }
 
     })();
