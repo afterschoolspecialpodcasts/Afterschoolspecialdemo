@@ -262,7 +262,7 @@
   <section class="nl-archive-section" aria-labelledby="nl-archive-heading">
     <div class="container">
       <div class="text-center">
-        <span class="section-label nl-reveal">All Issues</span>
+        <span class="section-label nl-reveal">Previous Edition</span>
         <h2 class="section-heading nl-reveal nl-reveal--d1" id="nl-archive-heading">The Archive</h2>
       </div>
 
@@ -544,16 +544,19 @@
       }
 
       /* ════════════════════════════════════════════
-         5. RSS FEED — Beehiiv auto-update
+         5. RSS FEED — Beehiiv auto-update (optimized)
          Fetches https://rss.beehiiv.com/feeds/LnBbDXdfm1.xml
-         Parses via CORS proxy (allorigins.win).
+         Order: session cache (instant) → direct fetch (fast) →
+         CORS proxy fallback (timeout-guarded, never hangs).
          Latest issue → #nlLatestContainer
-         Older issues → #nlArchiveContainer
-         Updates automatically forever with each new publish.
+         Previous issue only → #nlArchiveContainer
+         Updates automatically with each new publish.
       ════════════════════════════════════════════ */
       var RSS_URL    = 'https://rss.beehiiv.com/feeds/LnBbDXdfm1.xml';
-      var PROXY_URL  = 'https://api.allorigins.win/get?url=' + encodeURIComponent(RSS_URL);
-      var MAX_ARCHIVE = 9;
+      var PROXY_URL  = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(RSS_URL);
+      var MAX_ARCHIVE = 1; /* latest issue + previous edition only */
+      var CACHE_KEY    = 'assp_newsletter_rss_v1';
+      var CACHE_TTL_MS = 15 * 60 * 1000; /* 15 minutes — keeps feed fresh, avoids refetching every visit */
 
       function formatDate(dateStr) {
         try {
@@ -688,32 +691,78 @@
         if (archiveEl) archiveEl.innerHTML = '<div class="nl-archive-loading"><p>Visit <a href="https://afterschoolcollective.beehiiv.com/" target="_blank" rel="noopener noreferrer" class="nl-archive-accent-link">Beehiiv</a> for the full archive.</p></div>';
       }
 
-      /* Fetch via allorigins.win proxy to bypass CORS */
-      fetch(PROXY_URL)
-        .then(function (res) {
-          if (!res.ok) throw new Error('Network error');
-          return res.json();
-        })
-        .then(function (data) {
-          var parser = new DOMParser();
-          var xmlDoc = parser.parseFromString(data.contents, 'text/xml');
-          var parseError = xmlDoc.querySelector('parsererror');
-          if (parseError) throw new Error('XML parse error');
-          renderRSS(xmlDoc);
-        })
-        .catch(function () {
-          /* If proxy fails, try direct fetch (works if CORS allows it) */
-          fetch(RSS_URL)
-            .then(function (res) { return res.text(); })
-            .then(function (text) {
-              var parser = new DOMParser();
-              var xmlDoc = parser.parseFromString(text, 'text/xml');
-              var parseError = xmlDoc.querySelector('parsererror');
-              if (parseError) throw new Error('XML parse error');
-              renderRSS(xmlDoc);
-            })
-            .catch(handleRSSError);
-        });
+      /* ── Performance helpers ── */
+      function fetchWithTimeout(url, ms) {
+        return Promise.race([
+          fetch(url),
+          new Promise(function (_, reject) {
+            setTimeout(function () { reject(new Error('timeout')); }, ms);
+          })
+        ]);
+      }
+
+      function getCachedFeed() {
+        try {
+          var raw = sessionStorage.getItem(CACHE_KEY);
+          if (!raw) return null;
+          var parsed = JSON.parse(raw);
+          if (!parsed || (Date.now() - parsed.t) > CACHE_TTL_MS) return null;
+          return parsed.xml;
+        } catch (e) { return null; }
+      }
+
+      function setCachedFeed(xmlText) {
+        try {
+          sessionStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), xml: xmlText }));
+        } catch (e) { /* storage unavailable — fail silently, not critical */ }
+      }
+
+      function parseAndRender(xmlText) {
+        var parser = new DOMParser();
+        var xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+        if (xmlDoc.querySelector('parsererror')) throw new Error('XML parse error');
+        return xmlDoc;
+      }
+
+      /* ── Load sequence: cache → direct fetch (fast) → proxy fallback (timeout-guarded) ── */
+      function loadRSS() {
+        /* 1. Instant render from session cache if fresh — zero network wait */
+        var cached = getCachedFeed();
+        if (cached) {
+          try {
+            renderRSS(parseAndRender(cached));
+            return;
+          } catch (e) { /* cache corrupted — fall through to network */ }
+        }
+
+        /* 2. Try direct fetch first — fails fast if CORS blocked, succeeds fast if allowed */
+        fetchWithTimeout(RSS_URL, 5000)
+          .then(function (res) {
+            if (!res.ok) throw new Error('bad status');
+            return res.text();
+          })
+          .then(function (text) {
+            var xmlDoc = parseAndRender(text);
+            setCachedFeed(text);
+            renderRSS(xmlDoc);
+          })
+          .catch(function () {
+            /* 3. Fall back to CORS proxy, time-boxed so a slow proxy never hangs the page */
+            fetchWithTimeout(PROXY_URL, 7000)
+              .then(function (res) {
+                if (!res.ok) throw new Error('bad status');
+                return res.text();
+              })
+              .then(function (text) {
+                var xmlDoc = parseAndRender(text);
+                setCachedFeed(text);
+                renderRSS(xmlDoc);
+              })
+              .catch(handleRSSError);
+          });
+      }
+
+      loadRSS();
 
     })();
   </script>
